@@ -1,0 +1,1 @@
+--iniciação das tabelas se não existirem virão aqui, mas antes disso vamos diagramar tudo

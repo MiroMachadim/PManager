@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:18
+    container_name: PManager
+    environment:
+      #mude password e user, db pode manter igual
+      POSTGRES_USER: seunome
+      POSTGRES_PASSWORD: suasenha
+      POSTGRES_DB: PManager
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./init-db:/docker-entrypoint-initdb.d
+      - postgres_data:/var/lib/postgresql
+volumes:
+  postgres_data:
