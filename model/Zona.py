@@ -7,4 +7,4 @@ class Zona(db.Model):
 
     id = db.Column('id', db.Integer, primary_key=True)
     nome = db.Column('nome', db.varchar(50),unique=True, nullable=False)
-    area_id = db.Column('area_id',db.Integer, db.ForeignKey(Area.id), nullable = False)
+    area_id = db.Column('area_id',db.Integer, db.ForeignKey(Area.c.id), nullable = False)

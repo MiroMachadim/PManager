@@ -15,5 +15,5 @@ class Bo(db.Model):
     updated_by = db.Column("updated_by", db.varchar(8), db.ForeignKey(Pessoa.cpf), nullable=False)
     tipo_bo = db.Column("tipo_id", db.Integer , db.ForeignKey(Tipo.id))
     conteudo = db.Column("conteudo", db.Text, nullable=False)
-    localidade = db.Column("localidade", db.Integer, db.ForeignKey(Area.id))
+    localidade = db.Column("localidade", db.Integer, db.ForeignKey(Area.c.id))
     estado = db.Column("estado", db.Integer, db.ForeignKey(Estado.id))
