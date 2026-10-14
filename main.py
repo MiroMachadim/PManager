@@ -14,6 +14,9 @@ flask.Flask.secret_key = os.getenv("SECRET_KEY")
 login_manager.init_app(app)
 db.init_app(app)
 
+with app.app_context():
+    db.reflect()
+
 @app.route("/")
 def index():
     return "funcionando"
