@@ -61,7 +61,8 @@ CREATE TABLE IF NOT EXISTS Falta(
     policial_id INT,
     data_envio TIMESTAMP NOT NULL,
     data_fim DATE,
-    justificativa TEXT
+    justificativa TEXT,
+    FOREIGN KEY (policial_id) REFERENCES Policial(id)
 );
 
 CREATE TABLE IF NOT EXISTS TipoOcorrencia(
