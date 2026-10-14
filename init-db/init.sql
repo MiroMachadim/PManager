@@ -17,8 +17,10 @@ CREATE TABLE IF NOT EXISTS Policial(
     pessoa_cpf VARCHAR(11) UNIQUE NOT NULL,
     senha UUID UNIQUE NOT NULL,
     cargo_id INT,
+    equipe_id  INT,
     FOREIGN KEY (pessoa_cpf) REFERENCES Pessoa(cpf),
     FOREIGN KEY (cargo_id) REFERENCES Cargo(id)
+    FOREIGN KEY (equipe_id) REFERENCES Equipe(id)
 );
 
 CREATE TABLE IF NOT EXISTS Area(
