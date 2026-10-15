@@ -1,0 +1,10 @@
+from db_instance import db
+from model.Zona import Zona
+
+def enviarZona(nome,area):
+    zona = Zona()
+    zona.nome = nome
+    zona.area_id = area
+
+    db.session.add(zona)
+    db.session.commit()

@@ -84,8 +84,8 @@ CREATE TABLE IF NOT EXISTS Estados(
 CREATE TABLE IF NOT EXISTS Bo(
     id SERIAL PRIMARY KEY,
     created_at DATE NOT NULL,
-    updated_at DATE NOT NULL,
-    Created_by VARCHAR(100),
+    updated_at DATE,
+    Created_by VARCHAR(100) NOT NULL,
     Updated_by VARCHAR(100),
     tipo_id INT NOT NULL,
     conteudo TEXT NOT NULL,
