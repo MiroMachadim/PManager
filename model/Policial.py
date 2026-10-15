@@ -12,4 +12,3 @@ class Policial(UserMixin,db.Model):
     cpf = db.Column("cpf", db.Integer, db.ForeignKey(Pessoa.cpf))
     senha = db.Column("id", db.UUID, primary_key=True)
     cargo_id = db.Column("cargo_id",db.Integer, db.ForeignKey(Cargo.c.id))
-    equipe_id = db.Column("equipe_id",db.Integer, db.ForeignKey(Equipe.id))
