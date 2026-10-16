@@ -8,6 +8,7 @@ def enviar_falta(policial,justificativa, data_fim):
     falta = Falta()
     falta.c.policial_id = policial
     falta.c.data_envio = datetime.now(timezone.utc)
+    falta.c.data_fim = data_fim
     falta.c.justificativa = justificativa
     falta.c.data_fim = data_fim
 

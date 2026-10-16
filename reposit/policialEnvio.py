@@ -9,3 +9,8 @@ def enviar_policial(cpf, senha, cargo):
 
     db.session.add(policial)
     return db.session.commit()
+
+def atualizar_cargo(id,cargo):
+    policial = db.session.get(Policial,id)
+    policial.c.cargo_id = cargo
+    return db.session.commit()

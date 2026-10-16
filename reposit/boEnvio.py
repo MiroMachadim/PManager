@@ -64,9 +64,15 @@ def enviar_bo(cpf,estado,tipo,localidade,conteudo):
 
 def upd_bo(id,usuario,tipo,localidade,conteudo,estado):
     bo = db.session.get(Bo,id)
-    dadosUpd = {"cpf":usuario,"tipo":tipo,"localidade":localidade,"estado":estado,"conteudo":conteudo}
+    dados = {"cpf":usuario,"tipo":tipo,"localidade":localidade,"estado":estado,"conteudo":conteudo}
     if bo:
-        AtualizarMetaHandler().handle(bo,dadosUpd)
+        metahandle = AtualizarConteudoHandler()
+        estadohandle = AtualizarEstadoHandler()
+        conteudohandle = AtualizarConteudoHandler()
+        localidadehandle = AtualizarLocalidadeHandler()
+        tipohandle = AtualizarTipoHandler()
+        ordem = metahandle.set_next(estadohandle).set_next(conteudohandle).set_next(localidadehandle).set_next(tipohandle)
+        ordem.handle(bo,dados)
         db.session.commit()
     else:
         raise Exception("bo nao encontrado")

@@ -12,3 +12,4 @@ def get_membros():
     policiais = Policial()
     stmt = select(policiais.cpf,policiais.cargo_id).order_by(policiais.cargo_id)
     result = db.session.scalars(stmt).all()
+    return result

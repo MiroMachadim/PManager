@@ -14,7 +14,7 @@ class NomeHandler(AbstractHandler):
 
 class PosicaoHandler(AbstractHandler):
     def handle(self,request,dados: dict) -> Optional[str]:
-        pos = dados.get('pos')
+        pos = dados.get('posicao')
         if pos:
             request.c.posicao = pos
         return super().handle(request,dados)
@@ -30,9 +30,12 @@ def enviar_cargo(nome, pos):
 
 def upd_cargo(id,nome,posicao):
     cargo = db.session.get(Cargo,id)
+    dados = {'nome':nome,'posicao':posicao}
     if cargo:
-        dados = {'nome':nome, 'posicao':posicao}
-        NomeHandler().handle(cargo,dados)
+        nomehandle = NomeHandler()
+        posihandle = PosicaoHandler()
+        cadeia = nomehandle.set_next(posihandle)
+        cadeia.handle(cargo,dados)
         return db.session.commit()
     else:
         raise Exception("cargo nao encontrado")

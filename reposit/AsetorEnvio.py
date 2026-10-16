@@ -6,7 +6,7 @@ def envio_setor(policial,setor):
 
     acesso = Acesso()
 
-    verificarDuplicado(policial,setor)
+    verificar_duplicado(policial,setor)
 
     acesso.c.setor_id = setor
     acesso.c.policial_id = policial

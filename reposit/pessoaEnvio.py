@@ -4,10 +4,10 @@ import model.Pessoa
 
 def enviar_pessoa(cpf, nome, idade, sexo):
     pessoa = model.Pessoa.Pessoa()
-    pessoa.cpf = cpf
-    pessoa.nome = verificarNome(nome)
-    pessoa.idade = idade
-    pessoa.sexo = sexo
+    pessoa.c.cpf = cpf
+    pessoa.c.nome = verificar_nome(nome)
+    pessoa.c.idade = idade
+    pessoa.c.sexo = sexo
     db.session.add(pessoa)
 
     return db.session.commit()
