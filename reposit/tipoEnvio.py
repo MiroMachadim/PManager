@@ -1,7 +1,7 @@
 from db_instance import db
 from model.Tipo import Tipo
 
-def enviarTipo(nome):
+def enviar_tipo(nome):
     tipo = Tipo()
     tipo.c.nome = nome
 

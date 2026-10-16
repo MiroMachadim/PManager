@@ -1,7 +1,7 @@
 from db_instance import db
 from model.Zona import Zona
 
-def enviarZona(nome,area):
+def enviar_zona(nome,area):
     zona = Zona()
     zona.nome = nome
     zona.area_id = area

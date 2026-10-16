@@ -2,7 +2,7 @@ from db_instance import db
 import model.Pessoa
 
 
-def enviarPessoa(cpf, nome, idade, sexo):
+def enviar_pessoa(cpf, nome, idade, sexo):
     pessoa = model.Pessoa.Pessoa()
     pessoa.cpf = cpf
     pessoa.nome = verificarNome(nome)
@@ -12,7 +12,7 @@ def enviarPessoa(cpf, nome, idade, sexo):
 
     return db.session.commit()
 
-def verificarNome(nome):
+def verificar_nome(nome):
     for letra in nome:
         if letra == ' ' and letra.isalpha():
             continue

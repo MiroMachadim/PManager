@@ -2,11 +2,14 @@ from db_instance import db
 from model.Falta import Falta
 from datetime import datetime, timezone
 
-def enviarFalta(policial,justificativa):
+
+
+def enviar_falta(policial,justificativa, data_fim):
     falta = Falta()
-    falta.policial_id = policial
-    falta.data_envio = datetime.now(timezone.utc)
-    falta.justificativa = justificativa
+    falta.c.policial_id = policial
+    falta.c.data_envio = datetime.now(timezone.utc)
+    falta.c.justificativa = justificativa
+    falta.c.data_fim = data_fim
 
     db.session.add(falta)
     return db.session.commit()

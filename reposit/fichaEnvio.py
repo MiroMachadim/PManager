@@ -1,7 +1,7 @@
 from db_instance import db
 from model.Ficha import Ficha
 
-def enviarFicha(cpf,bo):
+def enviar_ficha(cpf,bo):
     ficha = Ficha()
     ficha.pessoa_cpf = cpf
     ficha.bo_id = bo

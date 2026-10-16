@@ -1,7 +1,7 @@
 from db_instance import db
 from model.Policial import Policial
 
-def enviarPolicial(cpf, senha, cargo):
+def enviar_policial(cpf, senha, cargo):
     policial = Policial()
     policial.cpf = cpf
     policial.senha = senha

@@ -1,10 +1,10 @@
 from db_instance import db
 from model.Equipe import Equipe
 
-def enviarEquipe(zona,lider):
+def enviar_equipe(zona,lider):
     equipe = Equipe()
-    equipe.zona_id = zona
-    equipe.lider_id = lider
+    equipe.c.zona_id = zona
+    equipe.c.lider_id = lider
 
     db.session.add(equipe)
     return db.session.commit()
