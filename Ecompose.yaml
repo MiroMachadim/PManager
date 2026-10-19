@@ -1,0 +1,19 @@
+#remova o E no nome antes de roda-lo, este é um arquivo exemplo ensinando como usar
+#tenha docker compose instalado e rode docker compose up -d depois de fazer as alterações necessárias
+services:
+  db:
+    image: postgres:18
+    container_name: PManager
+    environment:
+      #mude password e user, db pode manter igual
+      POSTGRES_USER: seunome
+      POSTGRES_PASSWORD: suasenha
+      POSTGRES_DB: PManager
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./init-db:/docker-entrypoint-initdb.d
+      - postgres_data:/var/lib/postgresql
+volumes:
+  postgres_data:
+# no seu arquivo .env, para acessar o banco coloque neste formato "postgresql://seunome:suasenha@localhost:porta/PManager"
