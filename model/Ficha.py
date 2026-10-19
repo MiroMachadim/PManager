@@ -1,6 +1,4 @@
 from db_instance import db
-from model.Pessoa import Pessoa
-from model.Ocorrencia import Bo
 
 
 class Ficha(db.Model):

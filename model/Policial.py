@@ -1,7 +1,4 @@
 from db_instance import db
-from Cargo import Cargo
-from model.Equipe import Equipe
-from model.Pessoa import Pessoa
 from flask_login import UserMixin
 
 
