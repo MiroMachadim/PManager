@@ -25,7 +25,7 @@ class AbstractHandler(Handler):
         return handler
 
     def set_feito(self):
-        self._feito+=1
+        AbstractHandler._feito += 1
 
     @abstractmethod
     def handle(self,request: db.Model,dados:dict,total=0) -> Optional[str]:
@@ -99,7 +99,7 @@ class PosicaoHandler(AbstractHandler):
             super().set_feito()
         return super().handle(request, dados, total)
 
-class senhaHandler(AbstractHandler):
+class SenhaHandler(AbstractHandler):
     def handle(self, request: db.Model, dados: dict, total=0) -> Optional[str]:
         senha = dados.get('senha')
         if senha:
@@ -252,3 +252,4 @@ class BoIdHandler(AbstractHandler):
             request.c.bo_id = bo_id
             super().set_feito()
         return super().handle(request, dados, total)
+
