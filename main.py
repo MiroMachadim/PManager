@@ -3,7 +3,7 @@ import os
 import dotenv
 from ext import login_manager
 from db_instance import db
-from flask_bcrypt import Bcrypt
+from blueprints.auth import login
 
 dotenv.load_dotenv()
 app = flask.Flask(__name__)
@@ -19,9 +19,7 @@ db.init_app(app)
 with app.app_context():
     db.reflect()
 
-@app.route("/")
-def index():
-    return "funcionando"
+app.register_blueprint(login.user_bp, url_prefix="/login")
 
 if __name__ == "__main__":
     app.run(debug=True)
