@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PManager - Ficha Criminal</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .top-bar, .footer-bar {
+            background-color: #A31D1D;
+            color: white;
+            padding: 15px 20px;
+        }
+        .top-bar {
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .top-bar a.nav-btn {
+            color: white;
+            text-decoration: none;
+            font-size: 0.95rem;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            padding: 5px 12px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .top-bar a.nav-btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        .footer-bar {
+            margin-top: auto;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+        .content-card {
+            max-width: 950px;
+            width: 100%;
+            margin: auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+        .section-title {
+            color: #A31D1D;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #A31D1D;
+            padding-bottom: 6px;
+            margin-bottom: 18px;
+        }
+        .profile-header-box {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 24px;
+        }
+        .avatar-placeholder {
+            width: 100px;
+            height: 100px;
+            background-color: #cbd5e1;
+            color: #334155;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            border: 3px solid #A31D1D;
+        }
+        .info-label {
+            color: #64748b;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        .info-value {
+            color: #1e293b;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+        .table th {
+            background-color: #f1f3f5;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barra Superior -->
+    <div class="top-bar">
+        <span>PManager</span>
+        <a href="/consultar-ficha" class="nav-btn">Voltar</a>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="container d-flex flex-column justify-content-center align-items-center my-5">
+        <div class="content-card">
+
+            <!-- Título e Subtítulo Centralizados -->
+            <h3 class="fw-bold text-dark text-center mb-1">Ficha Criminal do Indivíduo</h3>
+            <p class="text-muted text-center mb-4">Registro unificado de antecedentes e histórico de passagens policiais.</p>
+
+            <!-- Seção 1: Perfil Cadastral -->
+            <div class="section-title">Dados Pessoais</div>
+            <div class="profile-header-box mb-4">
+                <div class="row align-items-center g-4">
+                    <div class="col-md-auto text-center">
+                        <div class="avatar-placeholder mx-auto">
+                            CS
+                        </div>
+                    </div>
+                    <div class="col-md">
+                        <h4 class="fw-bold text-dark mb-3">{{ pessoa.nome if pessoa else 'Carlos da Silva' }}</h4>
+                        <div class="row g-3">
+                            <div class="col-sm-6 col-md-4">
+                                <div class="info-label">CPF</div>
+                                <div class="info-value">{{ pessoa.cpf if pessoa else '987.654.321-00' }}</div>
+                            </div>
+                            <div class="col-sm-6 col-md-4">
+                                <div class="info-label">RG</div>
+                                <div class="info-value">{{ pessoa.rg if pessoa else '12.345.678-9 SSP/SP' }}</div>
+                            </div>
+                            <div class="col-sm-6 col-md-4">
+                                <div class="info-label">Data de Nascimento</div>
+                                <div class="info-value">{{ pessoa.data_nascimento if pessoa else '12/04/1988' }}</div>
+                            </div>
+                            <div class="col-sm-6 col-md-4">
+                                <div class="info-label">Nome da Mãe</div>
+                                <div class="info-value">{{ pessoa.nome_mae if pessoa else 'Maria Helena da Silva' }}</div>
+                            </div>
+                            <div class="col-sm-6 col-md-4">
+                                <div class="info-label">Nome do Pai</div>
+                                <div class="info-value">{{ pessoa.nome_pai if pessoa else 'José Carlos da Silva' }}</div>
+                            </div>
+                            <div class="col-sm-6 col-md-4">
+                                <div class="info-label">Naturalidade</div>
+                                <div class="info-value">{{ pessoa.naturalidade if pessoa else 'São Paulo - SP' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seção 2: Histórico de Ocorrências Vinculadas -->
+            <div class="section-title">Histórico de Passagens e Ocorrências</div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle border">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Tipo de Crime</th>
+                            <th>Local (UF/Cidade)</th>
+                            <th>Status da Ocorrência</th>
+                            <th class="text-center">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- EXEMPLO ESTÁTICO DE OCORRÊNCIAS VINCULADAS -->
+                        <tr>
+                            <td class="fw-semibold">10/08/2025</td>
+                            <td>Receptação de Veículo</td>
+                            <td>SP - São Paulo</td>
+                            <td><span class="badge bg-warning text-dark">Em Validação</span></td>
+                            <td class="text-center">
+                                <a href="/editar-ocorrencia/1" class="btn btn-sm btn-outline-danger fw-semibold px-3">Ver Ocorrência</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="fw-semibold">15/02/2023</td>
+                            <td>Furto Qualificado</td>
+                            <td>SP - Campinas</td>
+                            <td><span class="badge bg-success">Concluído</span></td>
+                            <td class="text-center">
+                                <a href="/editar-ocorrencia/2" class="btn btn-sm btn-outline-danger fw-semibold px-3">Ver Ocorrência</a>
+                            </td>
+                        </tr>
+
+                        <!-- STRUCT JINJA2 / FLASK (USAR NA INTEGRAÇÃO COM BD) -->
+                        {#
+                        {% if ocorrencias %}
+                            {% for oc in ocorrencias %}
+                            <tr>
+                                <td class="fw-semibold">{{ oc.data_registro }}</td>
+                                <td>{{ oc.tipo_crime }}</td>
+                                <td>{{ oc.uf }} - {{ oc.cidade }}</td>
+                                <td><span class="badge bg-secondary">{{ oc.status }}</span></td>
+                                <td class="text-center">
+                                    <a href="/editar-ocorrencia/{{ oc.id }}" class="btn btn-sm btn-outline-danger fw-semibold px-3">Ver Ocorrência</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center py-4 text-muted">
+                                    Nenhuma ocorrência registrada para este CPF.
+                                </td>
+                            </tr>
+                        {% endif %}
+                        #}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Rodapé -->
+    <div class="footer-bar">
+        &copy; 2026 PManager. Todos os Direitos reservados a Miro Machado e Allan Gabryel.
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
