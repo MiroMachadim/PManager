@@ -1,5 +1,4 @@
 from db_instance import db
-from model.Area import Area
 
 
 class Zona(db.Model):

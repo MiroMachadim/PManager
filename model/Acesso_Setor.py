@@ -1,6 +1,4 @@
 from db_instance import db
-from model.Policial import Policial
-from model.Setor import Setor
 
 
 class Acesso(db.Model):

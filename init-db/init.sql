@@ -14,10 +14,11 @@ CREATE TABLE IF NOT EXISTS Cargo(
 
 CREATE TABLE IF NOT EXISTS Policial(
     id SERIAL PRIMARY KEY,
-    pessoa_cpf VARCHAR(11) UNIQUE NOT NULL,
-    senha UUID UNIQUE NOT NULL,
+    cpf VARCHAR(11) UNIQUE NOT NULL,
+    admin BOOL NOT NULL,
+    senha TEXT UNIQUE NOT NULL,
     cargo_id INT,
-    FOREIGN KEY (pessoa_cpf) REFERENCES Pessoa(cpf),
+    FOREIGN KEY (cpf) REFERENCES Pessoa(cpf),
     FOREIGN KEY (cargo_id) REFERENCES Cargo(id)
 );
 
@@ -36,17 +37,17 @@ CREATE TABLE IF NOT EXISTS Zona(
 CREATE TABLE IF NOT EXISTS Equipe(
     id SERIAL PRIMARY KEY,
     zona_id int,
-    lider_id int,
+    policial_id int,
     FOREIGN KEY (zona_id) REFERENCES Zona(id),
-    FOREIGN KEY (lider_id) REFERENCES Policial(id)
+    FOREIGN KEY (policial_id) REFERENCES Policial(id)
 );
 
 CREATE TABLE IF NOT EXISTS Acesso_equipe(
     id SERIAL PRIMARY KEY,
     equipe_id int,
-    membro_id int,
+    policial_id int,
     FOREIGN KEY (equipe_id) REFERENCES Equipe(id),
-    FOREIGN KEY (membro_id) REFERENCES Policial(id)
+    FOREIGN KEY (policial_id) REFERENCES Policial(id)
 );
 
 CREATE TABLE IF NOT EXISTS Setor(
@@ -65,7 +66,7 @@ CREATE TABLE IF NOT EXISTS Acesso_setor(
 CREATE TABLE IF NOT EXISTS Falta(
     id SERIAL PRIMARY KEY,
     policial_id INT,
-    data_envio TIMESTAMP NOT NULL,
+    created_at TIMESTAMP NOT NULL,
     data_fim DATE,
     justificativa TEXT,
     FOREIGN KEY (policial_id) REFERENCES Policial(id)
@@ -89,21 +90,21 @@ CREATE TABLE IF NOT EXISTS Bo(
     updated_by VARCHAR(100),
     tipo_id INT NOT NULL,
     conteudo TEXT NOT NULL,
-    localidade int,
-    estado INT,
-    FOREIGN KEY (Created_by) REFERENCES Pessoa(cpf),
-    FOREIGN KEY (Updated_by) REFERENCES Pessoa(cpf),
+    area_id int,
+    estado_id INT,
+    FOREIGN KEY (created_by) REFERENCES Pessoa(cpf),
+    FOREIGN KEY (updated_by) REFERENCES Pessoa(cpf),
     FOREIGN KEY (tipo_id) REFERENCES TipoOcorrencia(id),
     FOREIGN KEY (estado) REFERENCES Estados(id),
-    FOREIGN KEY (localidade) REFERENCES Area(id)
+    FOREIGN KEY (area_id) REFERENCES Area(id)
 );
 
 CREATE TABLE IF NOT EXISTS Ficha(
     id SERIAL PRIMARY KEY,
-    pessoa_cpf varchar(11),
-    bo_pessoa int,
-    FOREIGN KEY (pessoa_cpf) REFERENCES Pessoa(cpf),
-    FOREIGN KEY (bo_pessoa) REFERENCES bo(id)
+    cpf varchar(11),
+    bo_id int,
+    FOREIGN KEY (cpf) REFERENCES Pessoa(cpf),
+    FOREIGN KEY (bo_id) REFERENCES bo(id)
 );
 
 

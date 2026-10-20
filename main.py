@@ -3,9 +3,11 @@ import os
 import dotenv
 from ext import login_manager
 from db_instance import db
+from flask_bcrypt import Bcrypt
 
 dotenv.load_dotenv()
 app = flask.Flask(__name__)
+bcrypt = Bcrypt(app)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
