@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - PManager</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .top-bar, .footer-bar {
+            background-color: #A31D1D;
+            color: white;
+            padding: 15px 20px;
+        }
+        .top-bar {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        .footer-bar {
+            margin-top: auto;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+        .login-card {
+            max-width: 420px;
+            width: 100%;
+            margin: auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .login-card form {
+            text-align: left;
+        }
+        .btn-custom-red {
+            background-color: #A31D1D;
+            color: white;
+            border: none;
+        }
+        .btn-custom-red:hover {
+            background-color: #821515;
+            color: white;
+        }
+        .form-control:focus {
+            border-color: #A31D1D;
+            box-shadow: 0 0 0 0.2rem rgba(163, 29, 29, 0.25);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barra Superior -->
+    <div class="top-bar">
+        PManager
+    </div>
+
+    <!-- Conteúdo Principal de Login -->
+    <div class="container d-flex flex-column justify-content-center align-items-center my-5">
+        <div class="login-card">
+            <h2 class="fw-bold text-dark mb-1">PManager</h2>
+            <p class="text-muted mb-4">insira seus dados para entrar</p>
+
+            <!-- Formulário de Login -->
+            <form action="/login" method="POST">
+                <div class="mb-3">
+                    <label for="cpf" class="form-label text-secondary fw-semibold">CPF</label>
+                    <input type="text" class="form-control py-2" id="cpf" name="cpf" placeholder="000.000.000-00" maxlength="14" oninput="mascaraCPF(this)" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label text-secondary fw-semibold mb-0">Senha</label>
+                    <input type="password" class="form-control py-2 mt-1" id="password" name="password" placeholder="Digite sua senha" required>
+                </div>
+
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-custom-red py-2 fw-semibold">Entrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Rodapé -->
+    <div class="footer-bar">
+        &copy; 2026 PManager. Todos os Direitos reservados a Miro Machado e Allan Gabryel.
+    </div>
+
+    <!-- Script para formatar o CPF automaticamente -->
+    <script>
+        function mascaraCPF(input) {
+            let value = input.value.replace(/\D/g, "");
+            if (value.length > 11) value = value.slice(0, 11);
+
+            value = value.replace(/(\d{3})(\d)/, "$1.$2");
+            value = value.replace(/(\d{3})(\d)/, "$1.$2");
+            value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+
+            input.value = value;
+        }
+    </script>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,5 +1,7 @@
 Flask
 Flask-Login
 Flask-SQLAlchemy
+psycopg
 psycopg2-binary
 python-dotenv
+flask-bcrypt
