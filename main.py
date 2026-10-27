@@ -19,9 +19,6 @@ db.init_app(app)
 with app.app_context():
     db.reflect()
 
-@app.route("/")
-def index():
-    return "funcionando"
 
 if __name__ == "__main__":
     app.run(debug=True)
