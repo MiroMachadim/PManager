@@ -1,0 +1,10 @@
+import conexao_banco as cb
+import model
+
+
+def listar_oficiais() -> list:
+    oficiais = cb.listar(model.Policial.Policial)
+    return oficiais
+
+def buscar_oficial(id):
+    return cb.selecionar_por_id(model.Policial.Policial, id)
