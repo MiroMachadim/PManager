@@ -1,42 +1,39 @@
 from flask import Blueprint, render_template, request, url_for, redirect
-from werkzeug.utils import secure_filename
-import os
+from flask_login import current_user, login_required
+import service.sender_service as sender
 
 cadastro_bp = Blueprint('cadastro', __name__)
 
 @cadastro_bp.route('/cad_ocorrencia', methods=['GET','POST'])
+@login_required
 def cad_ocorrencia():
     if request.method == 'POST':
-        estado = request.form.get("estado")
-        cidade = request.form.get("cidade")
-        tipo_crime = request.form.get("tipo_crime")
-        cpf = request.form.get("cpf_vitima")
-        relato = request.form.get("descricao")
+        dados = dict()
+        dados["estado_id"] = request.form.get("estado")
+        dados["area_id"] = request.form.get("cidade")
+        dados["tipo_id"] = request.form.get("tipo_crime")
+        dados["cpf"] = request.form.get("cpf_vitima")
+        dados["conteudo"] = request.form.get("descricao")
+        dados["created_by"] = current_user.id
 
-        if estado and cidade and tipo_crime and cpf and relato:
-            print(estado, cidade,tipo_crime,cpf,relato)
+        enviado = sender.cadastrar_ocorrencia(dados)
+
+        if enviado:
             return redirect(url_for("hub.homepage"))
         else:
-            return render_template("cadastrar_ocorrencia.html")
+            return render_template("cadastrar_ocorrencia.html", msg="envio de bo falhou, tente novamente")
 
     return render_template("cadastrar_ocorrencia.html")
 
 @cadastro_bp.route('/cad_falta', methods=['GET','POST'])
+@login_required
 def cad_falta():
-
-    diretorio_uploads = 'uploads/faltas'
-
     if request.method == 'POST':
-        data_inicio = request.form.get("data_inicio")
-        data_fim = request.form.get("data_fim")
-        arquivo_falta = request.files.get("arquivo_comprovante")
-
-        if arquivo_falta and arquivo_falta.filename != "":
-            nome_seg = secure_filename(arquivo_falta.filename)
-            caminho_arquivo = os.path.join(diretorio_uploads, nome_seg)
-            arquivo_falta.save(caminho_arquivo)
-            CAMINHO_DO_BANCO = 'Miro c passa o caminho aqui para salvar no bd'
-            print(caminho_arquivo + "" + "salvo")
-            print(data_inicio, data_fim)
-            return redirect(url_for("hub.homepage"))
+        dados = dict()
+        dados["data_inicio"] = request.form.get("data_inicio")
+        dados["data_fim"] = request.form.get("data_fim")
+        dados["arquivo_falta"] = request.files.get("arquivo_comprovante")
+        dados["policial_id"] = current_user.id
+        if sender.enviar_falta(dados):
+           return redirect(url_for("hub.homepage"))
     return render_template("cadastrar_falta.html")

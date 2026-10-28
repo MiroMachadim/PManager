@@ -1,5 +1,6 @@
 # import query
 from flask import Blueprint, render_template, request, url_for, redirect
+import service.list_service as ls
 
 lista_bp = Blueprint('lista', __name__)
 
@@ -7,29 +8,7 @@ lista_bp = Blueprint('lista', __name__)
 def list_ocorrencia():
 
     # ocorrencias = "Miro coloca aqui a table das ocorrencias"
-
-    ocorrencias = [
-        {
-            "id": 1,
-            "data_registro": "2026-06-06 12:00",
-            "estado": "PB",
-            "cidade": "Cajazeiras",
-            "tipo_crime": "Furto",
-            "cpf_vitima": "123.456.789-00",
-            "descricao": "Exemplo de relato de teste.",
-            "status": "Em Andamento"
-        },
-        {
-            "id": 2,
-            "data_registro": "2026-06-06 12:00",
-            "estado": "PB",
-            "cidade": "Cajazeiras",
-            "tipo_crime": "Furto",
-            "cpf_vitima": "123.456.789-00",
-            "descricao": "Exemplo de relato de teste.",
-            "status": "Em Andamento"
-        }
-    ]
+    ocorrencias = ls.pedir_ocorrencias()
 
     filtro_cpf = request.args.get('cpf')
     filtro_tipo_crime = request.args.get('crime')
@@ -53,23 +32,7 @@ def list_ocorrencia():
 @lista_bp.route('/list_fichas', methods=['GET','POST'])
 def list_fichas():
 
-    # fichas = Miro coloca aqui a table das pessoas
-
-    fichas = [
-        {
-            "id": 1,
-            "nome" : "Vandra Volkovenn",
-            "cpf": "243.456.789-00",
-            "data_nascimento": "2026-06-06 12:00",
-        },
-        {
-            "id": 2,
-            "nome" : "Vandra Volksvagens",
-            "cpf": "123.456.789-00",
-            "data_nascimento": "2026-06-06 12:00",
-        }
-    ]
-
+    fichas = ls.listar_fichas()
     filtro_cpf = request.args.get('cpf')
     filtro_nome = request.args.get('nome')
 

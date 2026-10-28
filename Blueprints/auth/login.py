@@ -1,24 +1,19 @@
 from flask import Blueprint, render_template, request, url_for, redirect
-import db_fake
+import service.user_service as su
 
 login_bp = Blueprint('login', __name__)
 
 @login_bp.route('/login', methods=['GET','POST'])
 def login():
     if request.method == 'POST':
-       cpf = request.form.get("cpf")
-       senha = request.form.get("password")
-
-       usuario_encontrado = None
-       for user in db_fake.USUARIOS_FALSOS.values():
-           if user["cpf"] == cpf:
-               usuario_encontrado = user
-               break
-
-       if usuario_encontrado and usuario_encontrado["senha"] == senha:
-           if usuario_encontrado["admin"]:
+       dados = dict()
+       dados["cpf"] = request.form.get("cpf")
+       dados["senha"] = request.form.get("password")
+       user = su.login_service(dados)
+       if user:
+          if user.admin:
                return redirect(url_for('admin.homepage'))
-           else:
+          else:
                return redirect(url_for("hub.homepage"))
        else:
            return render_template('login.html', erro="CPF ou senha inválidos")

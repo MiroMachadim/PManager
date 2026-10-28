@@ -3,6 +3,7 @@ from flask import redirect, url_for, render_template
 import reposit.conexao_banco as cb
 import reposit.insercao_banco as ib
 import reposit.busca_banco as bb
+import crypt_service as pc
 from model.Policial import Policial
 
 
@@ -17,7 +18,10 @@ def cadastro_oficial(dados:dict):
 
 def listar_policial(cpf, zona,cargo) -> list:
     policial = Policial()
-    stmt = select(Policial()).where(policial.c.cpf==cpf,policial.c.zona == zona,policial.c.cargo==cargo)
+    ilikecpf = '%' + cpf + '%'
+    ilikezona = '%' + zona + '%'
+    ilikecargo = '%' + cargo + '%'
+    stmt = select(Policial()).where(policial.c.cpf.ilike(ilikecpf),policial.c.zona.ilike(ilikezona),policial.c.cargo.ilike(ilikecargo))
     return bb.buscar(stmt)
 
 def atualizar_oficial(dados: dict):
@@ -28,3 +32,15 @@ def atualizar_oficial(dados: dict):
 def iniciar_edicao(id):
     policial = cb.instanciar(Policial(),id)
     return render_template("editar_policial.html", policial=policial)
+
+def login_service(dados:dict):
+    cpf = dados.get('cpf')
+    senha = dados.get('senha')
+    existe = cb.listar_por_cpf(Policial(), cpf)
+    if existe:
+        senhaHash = existe[0].senha
+        if pc.verificar_senha(senha,senhaHash):
+            return existe[0]
+    else:
+        return False
+

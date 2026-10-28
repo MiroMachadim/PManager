@@ -165,6 +165,13 @@ class CreatedAtHandler(AbstractHandler):
             super().set_feito()
         return super().handle(request, dados, total)
 
+class DataInicioHandler(AbstractHandler):
+    def handle(self,request: db.Model,dados:dict,total=0) -> Optional[str]:
+        data_inicio = dados.get('data_inicio')
+        if data_inicio:
+            request.c.data_inicio = data_inicio
+            super().set_feito()
+        return super().handle(request, dados, total)
 
 class DataFimHandler(AbstractHandler):
     def handle(self,request: db.Model,dados:dict,total=0) -> Optional[str]:

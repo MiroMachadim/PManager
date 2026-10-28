@@ -12,3 +12,6 @@ def buscar_oficial(id):
 
 def buscar(tabela:db.Model,stmt):
     return db.session.scalars(db.session.select(tabela).where(stmt)).all()
+
+def join_ficha(stmt):
+    return db.session.scalars(stmt).all()
