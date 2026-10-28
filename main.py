@@ -3,7 +3,7 @@ import os
 import dotenv
 from ext import login_manager
 from db_instance import db
-from flask_bcrypt import Bcrypt
+from blueprints.auth import login
 
 dotenv.load_dotenv()
 

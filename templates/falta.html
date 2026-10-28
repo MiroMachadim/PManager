@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PManager - Justificar Falta</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .top-bar, .footer-bar {
+            background-color: #A31D1D;
+            color: white;
+            padding: 15px 20px;
+        }
+        .top-bar {
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .top-bar a.nav-btn {
+            color: white;
+            text-decoration: none;
+            font-size: 0.95rem;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            padding: 5px 12px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .top-bar a.nav-btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        .footer-bar {
+            margin-top: auto;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+        .form-card {
+            max-width: 650px;
+            width: 100%;
+            margin: auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+        .section-title {
+            color: #A31D1D;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #A31D1D;
+            padding-bottom: 6px;
+            margin-bottom: 18px;
+        }
+        /* Estilo da caixa de upload customizada */
+        .upload-dropzone {
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            background-color: #f8fafc;
+            padding: 35px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s, background-color 0.2s;
+            position: relative;
+        }
+        .upload-dropzone:hover {
+            border-color: #A31D1D;
+            background-color: #fff5f5;
+        }
+        .upload-dropzone input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .btn-custom-red {
+            background-color: #A31D1D;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            font-weight: 600;
+        }
+        .btn-custom-red:hover {
+            background-color: #821515;
+            color: white;
+        }
+        .form-control:focus {
+            border-color: #A31D1D;
+            box-shadow: 0 0 0 0.2rem rgba(163, 29, 29, 0.25);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barra Superior -->
+    <div class="top-bar">
+        <span>PManager</span>
+        <a href="/" class="nav-btn">Voltar</a>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="container d-flex flex-column justify-content-center align-items-center my-5">
+        <div class="form-card">
+            <h3 class="fw-bold text-dark text-center mb-1">Justificar Falta</h3>
+            <p class="text-muted text-center mb-4">Preencha o período e envie o documento comprovatório.</p>
+
+            <form action="/justificar-falta" method="POST" enctype="multipart/form-data">
+
+                <!-- Seção: Período da Ausência -->
+                <div class="section-title">Período da Ausência</div>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label for="data_inicio" class="form-label text-secondary fw-semibold">Data de Início</label>
+                        <input type="date" class="form-control" id="data_inicio" name="data_inicio" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="data_fim" class="form-label text-secondary fw-semibold">Data de Fim</label>
+                        <input type="date" class="form-control" id="data_fim" name="data_fim" required>
+                    </div>
+                </div>
+
+                <!-- Seção: Comprovação com Upload em Caixa Estilizada -->
+                <div class="section-title">Comprovação</div>
+                <div class="mb-4">
+                    <label class="form-label text-secondary fw-semibold mb-2">Anexar Documento / Atestado</label>
+                    <div class="upload-dropzone">
+                        <button type="button" class="btn btn-custom-red mb-2">Procurar</button>
+                        <div class="text-muted small">ou arraste o arquivo até aqui</div>
+                        <input type="file" id="arquivo_comprovante" name="arquivo_comprovante" required onchange="atualizarNomeArquivo(this)">
+                    </div>
+                    <div id="file-name-display" class="form-text text-success mt-2 fw-semibold text-center" style="display: none;"></div>
+                </div>
+
+                <!-- Botão de Envio -->
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-custom-red py-2 fw-semibold">Enviar</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- Rodapé -->
+    <div class="footer-bar">
+        &copy; 2026 PManager. Todos os Direitos reservados a Miro Machado e Allan Gabryel.
+    </div>
+
+    <!-- Script para mostrar o nome do arquivo selecionado -->
+    <script>
+        function atualizarNomeArquivo(input) {
+            const display

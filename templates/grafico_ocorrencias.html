@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PManager - Gráfico de Ocorrências</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Chart.js para Gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .top-bar, .footer-bar {
+            background-color: #A31D1D;
+            color: white;
+            padding: 15px 20px;
+        }
+        .top-bar {
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .top-bar a.nav-btn {
+            color: white;
+            text-decoration: none;
+            font-size: 0.95rem;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            padding: 5px 12px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .top-bar a.nav-btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        .footer-bar {
+            margin-top: auto;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+        .content-card {
+            max-width: 1000px;
+            width: 100%;
+            margin: auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+        .btn-filter {
+            border: 1px solid #A31D1D;
+            color: #A31D1D;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .btn-filter:hover, .btn-filter.active {
+            background-color: #A31D1D;
+            color: white;
+        }
+        .btn-custom-red {
+            background-color: #A31D1D;
+            color: white;
+            border: none;
+            font-weight: 600;
+        }
+        .btn-custom-red:hover {
+            background-color: #821515;
+            color: white;
+        }
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #A31D1D;
+            box-shadow: 0 0 0 0.2rem rgba(163, 29, 29, 0.25);
+        }
+        /* Estilo dos checkboxes e bolinhas coloridas de legenda */
+        .crime-checkbox-container {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+        }
+        .form-check-input {
+            width: 1.2rem;
+            height: 1.2rem;
+            cursor: pointer;
+        }
+        .form-check-input:checked {
+            background-color: #A31D1D;
+            border-color: #A31D1D;
+        }
+        .color-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barra Superior -->
+    <div class="top-bar">
+        <span>PManager</span>
+        <a href="/ver-ocorrencias" class="nav-btn">Voltar</a>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="container d-flex flex-column justify-content-center align-items-center my-5">
+        <div class="content-card">
+            <h3 class="fw-bold text-dark text-center mb-1">Estatísticas de Ocorrências</h3>
+            <p class="text-muted text-center mb-4">Selecione o tipo de análise e configure os filtros desejados.</p>
+
+            <!-- Botões Principais para Alternar as Visões -->
+            <div class="d-flex flex-wrap justify-content-center gap-2 mb-3">
+                <button type="button" class="btn btn-filter active px-3 py-2" onclick="trocarVisao('zonas', this)">
+                    Por Zonas
+                </button>
+                <button type="button" class="btn btn-filter px-3 py-2" onclick="trocarVisao('tempo', this)">
+                    Ao Longo do Tempo
+                </button>
+                <button type="button" class="btn btn-filter px-3 py-2" onclick="trocarVisao('tipos', this)">
+                    Tipos de Crime
+                </button>
+            </div>
+
+            <!-- Filtros Específicos para a Visão "Ao Longo do Tempo" -->
+            <div id="filtrosTempo" class="bg-light p-3 rounded border mb-4" style="display: none;">
+                <div class="row g-2 align-items-center justify-content-center">
+                    <div class="col-auto">
+                        <label class="fw-semibold text-secondary small">Filtrar por:</label>
+                    </div>
+                    <div class="col-auto">
+                        <select id="tipoFiltroTempo" class="form-select form-select-sm" onchange="atualizarFiltrosTempo(this.value)">
+                            <option value="ano">Por Ano (Visão Anual)</option>
+                            <option value="mes">Por Mês (Meses do Ano Atual)</option>
+                            <option value="intervalo">Intervalo de Anos</option>
+                        </select>
+                    </div>
+
+                    <!-- Sub-filtro para Escolha do Intervalo -->
+                    <div id="boxIntervaloAnos" class="col-auto align-items-center gap-2" style="display: none;">
+                        <div class="d-flex align-items-center gap-2">
+                            <input type="number" id="anoInicio" class="form-control form-control-sm" placeholder="Ano Início" value="2021" style="width: 90px;">
+                            <span class="small text-muted">até</span>
+                            <input type="number" id="anoFim" class="form-control form-control-sm" placeholder="Ano Fim" value="2026" style="width: 90px;">
+                            <button type="button" class="btn btn-sm btn-custom-red px-3 py-1" onclick="gerarGraficoTempo()">Aplicar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Layout Flexível para a Visão Tipos de Crime (Gráfico + Controles Laterais com Bolinhas de Cor) -->
+            <div id="containerTiposLayout" class="row align-items-center" style="display: none;">
+                <!-- Coluna do Gráfico -->
+                <div class="col-lg-9 mb-3 mb-lg-0">
+                    <div class="chart-container">
+                        <canvas id="meuGraficoTipos"></canvas>
+                    </div>
+                </div>
+                <!-- Coluna dos Botões Quadrados Laterais -->
+                <div class="col-lg-3">
+                    <div class="crime-checkbox-container">
+                        <h6 class="fw-bold text-secondary mb-3 small text-uppercase border-bottom pb-2">Filtrar Crimes</h6>
+                        <div class="d-flex flex-column gap-2">
+                            <div class="form-check d-flex align-items-center">
+                                <input class="form-check-input crime-filter me-2" type="checkbox" value="0" id="checkFurto" checked onchange="atualizarFiltrosTipos()">
+                                <label class="form-check-label small fw-semibold text-dark d-flex align-items-center" for="checkFurto">
+                                    <span class="color-dot" style="background-color: #A31D1D;"></span> Furto
+                                </label>
+                            </div>
+                            <div class="form-check d-flex align-items-center">
+                                <input class="form-check-input crime-filter me-2" type="checkbox" value="1" id="checkRoubo" checked onchange="atualizarFiltrosTipos()">
+                                <label class="form-check-label small fw-semibold text-dark d-flex align-items-center" for="checkRoubo">
+                                    <span class="color-dot" style="background-color: #D97706;"></span> Roubo
+                                </label>
+                            </div>
+                            <div class="form-check d-flex align-items-center">
+                                <input class="form-check-input crime-filter me-2" type="checkbox" value="2" id="checkAgressao" checked onchange="atualizarFiltrosTipos()">
+                                <label class="form-check-label small fw-semibold text-dark d-flex align-items-center" for="checkAgressao">
+                                    <span class="color-dot" style="background-color: #2563EB;"></span> Agressão
+                                </label>
+                            </div>
+                            <div class="form-check d-flex align-items-center">
+                                <input class="form-check-input crime-filter me-2" type="checkbox" value="3" id="checkDirecao" checked onchange="atualizarFiltrosTipos()">
+                                <label class="form-check-label small fw-semibold text-dark d-flex align-items-center" for="checkDirecao">
+                                    <span class="color-dot" style="background-color: #059669;"></span> Direção Perigosa
+                                </label>
+                            </div>
+                            <div class="form-check d-flex align-items-center">
+                                <input class="form-check-input crime-filter me-2" type="checkbox" value="4" id="checkEstelionato" checked onchange="atualizarFiltrosTipos()">
+                                <label class="form-check-label small fw-semibold text-dark d-flex align-items-center" for="checkEstelionato">
+                                    <span class="color-dot" style="background-color: #7C3AED;"></span> Estelionato
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Área do Gráfico Principal (Para Zonas e Tempo) -->
+            <div id="containerGraficoPrincipal" class="chart-container">
+                <canvas id="meuGraficoPrincipal"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rodapé -->
+    <div class="footer-bar">
+        &copy; 2026 PManager. Todos os Direitos reservados a Miro Machado e Allan Gabryel.
+    </div>
+
+    <!-- Script de Configuração do Chart.js -->
+    <script>
+        let chartPrincipal = null;
+        let chartTipos = null;
+
+        // 1. Gráfico Por Zonas
+        function renderizarPorZonas() {
+            destruirGraficos();
+            const ctx = document.getElementById('meuGraficoPrincipal').getContext('2d');
+
+            chartPrincipal = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Zona Norte', 'Zona Sul', 'Zona Leste', 'Zona Oeste', 'Centro'],
+                    datasets: [{
+                        label: 'Total de Ocorrências por Zona',
+                        data: [42, 28, 65, 30, 85],
+                        borderColor: '#A31D1D',
+                        backgroundColor: 'rgba(163, 29, 29, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 5
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+
+        // 2. Gráfico Ao Longo do Tempo
+        function gerarGraficoTempo() {
+            destruirGraficos();
+            const ctx = document.getElementById('meuGraficoPrincipal').getContext('2d');
+            const modo = document.getElementById('tipoFiltroTempo').value;
+
+            let labels = [];
+            let data = [];
+            let titulo = '';
+
+            if (modo === 'ano') {
+                titulo = 'Ocorrências por Ano';
+                labels = ['2021', '2022', '2023', '2024', '2025', '2026'];
+                data = [320, 410, 380, 490, 530, 610];
+            } else if (modo === 'mes') {
+                titulo = 'Ocorrências em 2026 (Por Mês)';
+                labels = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out'];
+                data = [45, 52, 48, 60, 55, 70, 68, 82, 75, 90];
+            } else if (modo === 'intervalo') {
+                const inicio = parseInt(document.getElementById('anoInicio').value) || 2021;
+                const fim = parseInt(document.getElementById('anoFim').value) || 2026;
+                titulo = `Ocorrências de ${inicio} até ${fim}`;
+
+                for (let a = inicio; a <= fim; a++) {
+                    labels.push(a.toString());
+                    data.push(Math.floor(Math.random() * 200) + 300);
+                }
+            }
+
+            chartPrincipal = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: titulo,
+                        data: data,
+                        borderColor: '#1D4ED8',
+                        backgroundColor: 'rgba(29, 78, 216, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 5
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+
+        // 3. Gráfico Comparativo por Tipos de Crime
+        const datasetsOriginais = [
+            { label: 'Furto', data: [30, 35, 40, 45, 38, 50, 55, 60, 58, 65], borderColor: '#A31D1D', borderWidth: 3, tension: 0.2 },
+            { label: 'Roubo', data: [20, 22, 25, 30, 28, 35, 32, 40, 38, 42], borderColor: '#D97706', borderWidth: 3, tension: 0.2 },
+            { label: 'Agressão', data: [10, 15, 12, 18, 14, 20, 15, 22, 19, 25], borderColor: '#2563EB', borderWidth: 3, tension: 0.2 },
+            { label: 'Direção Perigosa', data: [15, 18, 20, 22, 25, 21, 28, 30, 27, 33], borderColor: '#059669', borderWidth: 3, tension: 0.2 },
+            { label: 'Estelionato', data: [8, 12, 15, 11, 19, 22, 20, 25, 29, 31], borderColor: '#7C3AED', borderWidth: 3, tension: 0.2 }
+        ];
+
+        function renderizarPorTipos() {
+            destruirGraficos();
+            const ctx = document.getElementById('meuGraficoTipos').getContext('2d');
+
+            const checkboxes = document.querySelectorAll('.crime-filter');
+            let datasetsAtivos = [];
+
+            checkboxes.forEach((cb) => {
+                if (cb.checked) {
+                    datasetsAtivos.push(datasetsOriginais[parseInt(cb.value)]);
+                }
+            });
+
+            chartTipos = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out'],
+                    datasets: datasetsAtivos
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        function atualizarFiltrosTipos() {
+            renderizarPorTipos();
+        }
+
+        // Funções de Controle de Layout e Visão
+        function destruirGraficos() {
+            if (chartPrincipal) { chartPrincipal.destroy(); chartPrincipal = null; }
+            if (chartTipos) { chartTipos.destroy(); chartTipos = null; }
+        }
+
+        function trocarVisao(visao, elementoBotao) {
+            document.querySelectorAll('.btn-filter').forEach(btn => btn.classList.remove('active'));
+            elementoBotao.classList.add('active');
+
+            const filtrosTempo = document.getElementById('filtrosTempo');
+            const containerPrincipal = document.getElementById('containerGraficoPrincipal');
+            const containerTipos = document.getElementById('containerTiposLayout');
+
+            filtrosTempo.style.display = visao === 'tempo' ? 'block' : 'none';
+
+            if (visao === 'tipos') {
+                containerPrincipal.style.display = 'none';
+                containerTipos.style.display = 'flex';
+                renderizarPorTipos();
+            } else {
+                containerTipos.style.display = 'none';
+                containerPrincipal.style.display = 'block';
+                if (visao === 'zonas') renderizarPorZonas();
+                else if (visao === 'tempo') gerarGraficoTempo();
+            }
+        }
+
+        function atualizarFiltrosTempo(modo) {
+            const boxIntervalo = document.getElementById('boxIntervaloAnos');
+            boxIntervalo.style.display = modo === 'intervalo' ? 'flex' : 'none';
+            if (modo !== 'intervalo') {
+                gerarGraficoTempo();
+            }
+        }
+
+        // Inicialização padrão
+        document.addEventListener('DOMContentLoaded', function() {
+            renderizarPorZonas();
+        });
+    </script>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
