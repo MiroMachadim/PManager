@@ -1,37 +1,46 @@
-from chain import chain
-from model.Pessoa import Pessoa
+from select import select
+from flask import redirect, url_for, render_template
+import reposit.conexao_banco as cb
+import reposit.insercao_banco as ib
+import reposit.busca_banco as bb
+import crypt_service as pc
 from model.Policial import Policial
-from reposit import conexao_banco
-from service.crypt_service import encriptar_senha
 
 
+def cadastro_oficial(dados:dict):
+    cpf = dados.get('cpf')
+    oficiais = cb.selecionar_por_cpf(Policial(), cpf)
+    if oficiais:
+        ib.inserir_oficial(dados)
+        return redirect(url_for("admin.hub._admin",msg="inserido com sucesso"))
+    else:
+        return redirect(url_for("cadastrar_policial",msg="oficial ja inserido"))
 
-def inserir_pessoa(dados: dict):
-   pessoa = Pessoa()
-   return conexao_banco.inserir_dados(pessoa, dados, 4)
-
-def atualizar_pessoa(dados: dict):
-    pessoa = conexao_banco.instanciar(Pessoa, dados.get('cpf'))
-    return conexao_banco.inserir_dados(pessoa, dados, 4)
-
-def inserir_oficial(dados: dict):
+def listar_policial(cpf, zona,cargo) -> list:
     policial = Policial()
-    senha = dados.get('senha')
-    encriptada = encriptar_senha(senha)
-    dados.update({'senha': encriptada})
-    return conexao_banco.inserir_dados(policial, dados, 4)
+    ilikecpf = '%' + cpf + '%'
+    ilikezona = '%' + zona + '%'
+    ilikecargo = '%' + cargo + '%'
+    stmt = select(Policial()).where(policial.c.cpf.ilike(ilikecpf),policial.c.zona.ilike(ilikezona),policial.c.cargo.ilike(ilikecargo))
+    return bb.buscar(stmt)
 
 def atualizar_oficial(dados: dict):
-    oficial = conexao_banco.instanciar(Policial, dados.get('id'))
+    status = ib.atualizar_oficial(dados)
+    if not status:
+        return redirect(url_for("admin.list_perfis",msg="algo deu errado, tente novamente"))
+
+def iniciar_edicao(id):
+    policial = cb.instanciar(Policial(),id)
+    return render_template("editar_policial.html", policial=policial)
+
+def login_service(dados:dict):
+    cpf = dados.get('cpf')
     senha = dados.get('senha')
-    if senha:
-        dados.update({'senha':encriptar_senha(senha)})
-    return conexao_banco.inserir_dados(oficial, dados, 4)
-
-def listar_oficiais() -> list:
-    oficiais = conexao_banco.listar(Policial)
-    return oficiais
-
-def buscar_oficial(id):
-    return conexao_banco.selecionar_por_id(Policial, id)
+    existe = cb.listar_por_cpf(Policial(), cpf)
+    if existe:
+        senhaHash = existe[0].senha
+        if pc.verificar_senha(senha,senhaHash):
+            return existe[0]
+    else:
+        return False
 

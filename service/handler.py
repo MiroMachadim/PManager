@@ -31,6 +31,7 @@ class AbstractHandler(Handler):
     def handle(self,request: db.Model,dados:dict,total=0) -> Optional[str]:
         if self._next_handler and self._feito != total:
             return self._next_handler.handle(request,dados,total)
+        AbstractHandler._feito = 0
         return None
 
 def verificar_nome(nome):
@@ -164,6 +165,13 @@ class CreatedAtHandler(AbstractHandler):
             super().set_feito()
         return super().handle(request, dados, total)
 
+class DataInicioHandler(AbstractHandler):
+    def handle(self,request: db.Model,dados:dict,total=0) -> Optional[str]:
+        data_inicio = dados.get('data_inicio')
+        if data_inicio:
+            request.c.data_inicio = data_inicio
+            super().set_feito()
+        return super().handle(request, dados, total)
 
 class DataFimHandler(AbstractHandler):
     def handle(self,request: db.Model,dados:dict,total=0) -> Optional[str]:
@@ -252,4 +260,12 @@ class BoIdHandler(AbstractHandler):
             request.c.bo_id = bo_id
             super().set_feito()
         return super().handle(request, dados, total)
+
+class CulpadoHandler(AbstractHandler):
+    def handle(self,request: db.Model,dados:dict,total=0) -> Optional[str]:
+        culpado = dados.get('culpado')
+        if culpado:
+            request.c.culpado = culpado
+            super().set_feito()
+        return super().handle(request,dados,total)
 

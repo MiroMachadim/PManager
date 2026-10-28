@@ -67,6 +67,7 @@ CREATE TABLE IF NOT EXISTS Falta(
     id SERIAL PRIMARY KEY,
     policial_id INT,
     created_at TIMESTAMP NOT NULL,
+    data_inicio DATE NOT NULL,
     data_fim DATE,
     justificativa TEXT,
     FOREIGN KEY (policial_id) REFERENCES Policial(id)
@@ -89,13 +90,15 @@ CREATE TABLE IF NOT EXISTS Bo(
     created_by VARCHAR(100) NOT NULL,
     updated_by VARCHAR(100),
     tipo_id INT NOT NULL,
+    cpf_vitima VARCHAR(11) NOT NULL,
     conteudo TEXT NOT NULL,
     area_id int,
     estado_id INT,
+    FOREIGN KEY (cpf_vitima) REFERENCES Pessoa(cpf),
     FOREIGN KEY (created_by) REFERENCES Pessoa(cpf),
     FOREIGN KEY (updated_by) REFERENCES Pessoa(cpf),
     FOREIGN KEY (tipo_id) REFERENCES TipoOcorrencia(id),
-    FOREIGN KEY (estado) REFERENCES Estados(id),
+    FOREIGN KEY (estado_id) REFERENCES Estados(id),
     FOREIGN KEY (area_id) REFERENCES Area(id)
 );
 

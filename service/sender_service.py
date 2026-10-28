@@ -1,0 +1,53 @@
+import os
+from os import abort
+
+import reposit.conexao_banco as cb
+import reposit.insercao_banco as ib
+from datetime import datetime, timezone
+import model
+from werkzeug.utils import secure_filename
+from main import app
+
+
+def cadastrar_ocorrencia(dados: dict):
+    created_at = setar_data()
+    dados.update({"created_at": created_at})
+    bo = model.Policial.Policial()
+    enviado = cb.inserir_dados(bo,dados,7)
+    return enviado
+
+
+def enviar_falta(dados: dict):
+    arquivo = dados.get("arquivo_falta")
+    created_at = setar_data()
+    dados.update({"created_at": created_at})
+    filename = secure_filename(arquivo)
+    if filename:
+        file_ext = filename.rsplit('.', 1)[1].lower()
+        if file_ext not in app.config['ALLOWED_EXTENSIONS']:
+            abort(400)
+        arquivo.save(os.path.join,app.config["UPLOAD_FOLDER"], filename)
+        dados.update({"arquivo_falta": filename})
+    bo = model.Ocorrencia.Bo()
+    return cb.inserir_dados(bo,dados,5)
+
+
+
+def setar_data():
+    return datetime.now(timezone.utc)
+
+def atualizar_ocorrencia(dados:dict):
+    id = dados.get("id")
+    bo = model.Ocorrencia.Bo()
+    instance = cb.instanciar(bo,id)
+    updated_at = setar_data()
+    dados.update({"updated_at": updated_at})
+    chaves = dados.keys()
+    quantia_upd = 0
+    for chave in chaves:
+        if chaves.get(chave) is None or chave == "id":
+            dados.pop(chave)
+        else:
+            quantia_upd += 1
+    cb.inserir_dados(instance,dados,quantia_upd)
+    return ib
