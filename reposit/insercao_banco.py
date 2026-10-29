@@ -1,7 +1,6 @@
 import model
 from service.crypt_service import encriptar_senha
-import conexao_banco as cb
-
+import reposit.conexao_banco as cb
 def inserir_oficial(dados: dict):
     policial = model.Policial.Policial()
     senha = dados.get('senha')

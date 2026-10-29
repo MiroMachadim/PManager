@@ -4,7 +4,7 @@ from Blueprints.hubs.hubs import ocorrencias
 
 view_bp = Blueprint('view', __name__)
 
-@view_bp.route('/view/<str:cpf>', methods=['GET','POST'])
+@view_bp.route('/view/<cpf>', methods=['GET','POST'])
 def ficha(cpf):
     pessoa = listar.pedir_pessoa(cpf)
     boletins = listar.listar_bo_ficha(cpf)

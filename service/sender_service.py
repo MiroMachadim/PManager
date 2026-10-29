@@ -6,7 +6,6 @@ import reposit.insercao_banco as ib
 from datetime import datetime, timezone
 import model
 from werkzeug.utils import secure_filename
-from main import app
 
 
 def cadastrar_ocorrencia(dados: dict):
@@ -18,6 +17,7 @@ def cadastrar_ocorrencia(dados: dict):
 
 
 def enviar_falta(dados: dict):
+    from main import app
     arquivo = dados.get("arquivo_falta")
     created_at = setar_data()
     dados.update({"created_at": created_at})

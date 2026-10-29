@@ -1,4 +1,4 @@
-import conexao_banco as cb
+import reposit.conexao_banco as cb
 import model
 from db_instance import db
 

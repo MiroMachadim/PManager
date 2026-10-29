@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, url_for, redirect
 from flask_login import current_user, login_required
-
-from service.sender_service import atualizar_ocorrencia, pedir_ocorrencias
+from service.list_service import pedir_ocorrencias
+from service.sender_service import atualizar_ocorrencia
 
 update_bp = Blueprint('update', __name__)
 

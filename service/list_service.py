@@ -1,9 +1,7 @@
 from select import select
-
 import reposit.conexao_banco as cb
 import model
 import reposit.busca_banco as busca
-from model.Ficha import Ficha
 
 
 def pedir_ocorrencias():
