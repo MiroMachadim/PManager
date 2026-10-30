@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PManager - Editar Ocorrência (#01)</title>
+    <title>PManager - Editar Ocorrência (#{{ ocorrencia.id }})</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -89,7 +89,7 @@
     <!-- Barra Superior -->
     <div class="top-bar">
         <span>PManager</span>
-        <a href="/editar-ocorrencia" class="nav-btn">Voltar</a>
+        <a href="javascript:history.back()" class="nav-btn">Voltar</a>
     </div>
 
     <!-- Conteúdo Principal -->
@@ -98,12 +98,22 @@
 
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h3 class="fw-bold text-dark mb-0">Editar Ocorrência</h3>
-                <!-- Badge visual do status atual -->
-                <span class="badge bg-warning text-dark fs-6 px-3 py-2">Em Validação</span>
+                <!-- Badge dinâmico de status -->
+                {% if ocorrencia.status == 'Em Validação' %}
+                    <span class="badge bg-light text-dark border fs-6 px-3 py-2">Em Validação</span>
+                {% elif ocorrencia.status == 'Emitido' %}
+                    <span class="badge bg-success bg-opacity-75 text-white fs-6 px-3 py-2">Emitido</span>
+                {% elif ocorrencia.status == 'Recusado' %}
+                    <span class="badge bg-danger text-white fs-6 px-3 py-2">Recusado</span>
+                {% elif ocorrencia.status == 'Concluído' %}
+                    <span class="badge bg-success text-white fs-6 px-3 py-2">Concluído</span>
+                {% else %}
+                    <span class="badge bg-secondary text-white fs-6 px-3 py-2">{{ ocorrencia.status }}</span>
+                {% endif %}
             </div>
             <p class="text-muted mb-4">Atualize os detalhes ou o status do registro policial.</p>
 
-            <form action="/editar-ocorrencia/1" method="POST">
+            <form action="{{ url_for('update.upd_ocorrencia', id=ocorrencia.id) }}" method="POST">
 
                 <!-- Seção 1: Informações de Auditoria (NÃO EDITÁVEIS) -->
                 <div class="section-title">Informações de Auditoria</div>
@@ -111,20 +121,20 @@
                     <div class="row g-3">
                         <div class="col-md-3">
                             <label class="form-label text-muted fw-semibold small mb-1">Nº Registro</label>
-                            <div class="fw-bold text-dark">#0001</div>
+                            <div class="fw-bold text-dark">#{{ ocorrencia.id }}</div>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label text-muted fw-semibold small mb-1">Policial Responsável</label>
-                            <div class="fw-bold text-dark">Agente Miro Machado</div>
+                            <div class="fw-bold text-dark">{{ ocorrencia.created_by }}</div>
                         </div>
                         <div class="col-md-5">
                             <label class="form-label text-muted fw-semibold small mb-1">Data/Hora de Abertura</label>
-                            <div class="fw-bold text-dark">15/10/2026 às 18:30</div>
+                            <div class="fw-bold text-dark">{{ ocorrencia.created_at}} - {{ocorrencia.horario_registro }}</div>
                         </div>
                         <div class="col-12 border-top pt-2 mt-2">
                             <label class="form-label text-muted fw-semibold small mb-1">Última Edição</label>
                             <div class="text-secondary small">
-                                Editado em 15/10/2026 às 19:10 pelo Agente Allan Gabryel.
+                                Editado em {{ ocorrencia.updated_at }} pelo(a) agente {{ ocorrencia.updated_by }}.
                             </div>
                         </div>
                     </div>
@@ -135,7 +145,7 @@
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
                         <label for="uf" class="form-label text-secondary fw-semibold">Estado (UF)</label>
-                        <select class="form-select" id="uf" name="uf" required onchange="carregarCidades(this.value)">
+                        <select class="form-select" id="uf" name="estado" required onchange="carregarCidades(this.value)">
                             <option value="" disabled>Selecione o Estado</option>
                         </select>
                     </div>
@@ -152,17 +162,17 @@
 
                 <div class="mb-3">
                     <label for="tipo_crime" class="form-label text-secondary fw-semibold">Tipo do Crime</label>
-                    <input type="text" class="form-control" id="tipo_crime" name="tipo_crime" value="Furto de Veículo" required>
+                    <input type="text" class="form-control" id="tipo_crime" name="tipo_crime" value="{{ ocorrencia.tipo_crime }}" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="cpf_vitima" class="form-label text-secondary fw-semibold">CPF da Vítima</label>
-                    <input type="text" class="form-control" id="cpf_vitima" name="cpf_vitima" value="123.456.789-00" maxlength="14" oninput="mascaraCPF(this)" required>
+                    <input type="text" class="form-control" id="cpf_vitima" name="cpf_vitima" value="{{ ocorrencia.cpf_vitima }}" maxlength="14" oninput="mascaraCPF(this)" required>
                 </div>
 
                 <div class="mb-4">
                     <label for="descricao" class="form-label text-secondary fw-semibold">Descrição do Acontecimento</label>
-                    <textarea class="form-control" id="descricao" name="descricao" rows="5" required>Veículo furtado durante o período noturno enquanto estava estacionado em frente à residência da vítima. Câmeras de segurança locais capturaram o momento por volta das 02:15.</textarea>
+                    <textarea class="form-control" id="descricao" name="descricao" rows="5" required>{{ ocorrencia.relato }}</textarea>
                 </div>
 
                 <!-- Seção 4: Status da Ocorrência (EDITÁVEL) -->
@@ -170,10 +180,10 @@
                 <div class="mb-4">
                     <label for="status" class="form-label text-secondary fw-semibold">Atualizar Status</label>
                     <select class="form-select fw-semibold text-dark" id="status" name="status" required>
-                        <option value="Em Validação" selected>Em Validação</option>
-                        <option value="Emitido">Emitido</option>
-                        <option value="Recusado">Recusado</option>
-                        <option value="Concluído">Concluído</option>
+                        <option value="Em Validação" {% if ocorrencia.status == 'Em Validação' %}selected{% endif %}>Em Validação</option>
+                        <option value="Emitido" {% if ocorrencia.status == 'Emitido' %}selected{% endif %}>Emitido</option>
+                        <option value="Recusado" {% if ocorrencia.status == 'Recusado' %}selected{% endif %}>Recusado</option>
+                        <option value="Concluído" {% if ocorrencia.status == 'Concluído' %}selected{% endif %}>Concluído</option>
                     </select>
                 </div>
 
@@ -204,8 +214,9 @@
             input.value = value;
         }
 
-        const estadoPadrao = "SP";
-        const cidadePadrao = "São Paulo";
+        // Variáveis injetadas dinamicamente via Jinja2 para a API do IBGE
+        const estadoAtual = "{{ ocorrencia.estado }}";
+        const cidadeAtual = "{{ ocorrencia.cidade }}";
 
         document.addEventListener("DOMContentLoaded", function() {
             fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome")
@@ -216,10 +227,12 @@
                         let option = document.createElement("option");
                         option.value = uf.sigla;
                         option.textContent = `${uf.nome} (${uf.sigla})`;
-                        if (uf.sigla === estadoPadrao) option.selected = true;
+                        if (uf.sigla === estadoAtual) option.selected = true;
                         ufSelect.appendChild(option);
                     });
-                    carregarCidades(estadoPadrao, cidadePadrao);
+                    if (estadoAtual) {
+                        carregarCidades(estadoAtual, cidadeAtual);
+                    }
                 });
         });
 

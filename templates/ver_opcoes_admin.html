@@ -69,7 +69,7 @@
     <!-- Barra Superior -->
     <div class="top-bar">
         <span>PManager</span>
-        <a href="/" class="nav-btn">Voltar</a>
+        <a href="{{url_for('admin.homepage')}}" class="nav-btn">Voltar</a>
     </div>
 
     <!-- Conteúdo Principal do Hub do Administrador -->
@@ -80,8 +80,8 @@
 
             <!-- Menu com as 2 opções -->
             <div class="d-grid gap-3">
-                <a href="/cadastrar-policial" class="btn btn-custom-red shadow-sm py-3 fs-6">Cadastrar Novo Policial</a>
-                <a href="/ver-perfis" class="btn btn-custom-red shadow-sm py-3 fs-6">Ver Perfis</a>
+                <a href="{{url_for('admin.cad_policial')}}" class="btn btn-custom-red shadow-sm py-3 fs-6">Cadastrar Novo Policial</a>
+                <a href="{{url_for('admin.list_perfis')}}" class="btn btn-custom-red shadow-sm py-3 fs-6">Ver Perfis</a>
             </div>
         </div>
     </div>

@@ -5,20 +5,20 @@ import reposit.busca_banco as busca
 
 
 def pedir_ocorrencias():
-    return cb.listar(model.Ocorrencia.Bo())
+    return cb.listar(model.Ocorrencia.Bo().__table__)
 
 def pedir_pessoa(cpf):
-    return cb.selecionar_por_cpf(model.Pessoa.Pessoa(),cpf)
+    return cb.selecionar_por_cpf(model.Pessoa.Pessoa().__table__,cpf)
 
 def listar_bo_ficha(cpf):
-    bo = model.Ocorrencia.Bo()
+    bo = model.Ocorrencia.Bo().__table__
     stmt = (bo.c.cpf_vitima == cpf)
     return busca.buscar(bo,stmt)
 
 def listar_fichas():
-    pessoa = model.Pessoa.Pessoa()
-    bo = model.Ocorrencia.Bo()
-    ficha = model.Ficha.Ficha()
+    pessoa = model.Pessoa.Pessoa().__table__
+    bo = model.Ocorrencia.Bo().__table__
+    ficha = model.Ficha.Ficha().__table__
     stmt = select(
             ficha.c.id.label("id"),
             pessoa.c.nome.label("nome"),

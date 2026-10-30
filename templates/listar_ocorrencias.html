@@ -86,7 +86,7 @@
     <!-- Barra Superior -->
     <div class="top-bar">
         <span>PManager</span>
-        <a href="/ver-ocorrencias" class="nav-btn">Voltar</a>
+        <a href="{{url_for('hub.ocorrencias')}}" class="nav-btn">Voltar</a>
     </div>
 
     <!-- Conteúdo Principal -->
@@ -96,7 +96,7 @@
             <p class="text-muted text-center mb-4">Filtre ou visualize as ocorrências registradas no sistema (ordem padrão: mais recentes).</p>
 
             <!-- Formulário de Filtros -->
-            <form action="/editar-ocorrencia" method="GET" class="row g-3 mb-4 bg-light p-3 rounded-3 border">
+            <form action="{{ url_for('lista.list_ocorrencia')}}" method="GET" class="row g-3 mb-4 bg-light p-3 rounded-3 border">
                 <div class="col-md-3">
                     <label for="filtro_cpf" class="form-label text-secondary fw-semibold small">CPF da Vítima</label>
                     <input type="text" class="form-control form-control-sm" id="filtro_cpf" name="cpf" placeholder="000.000.000-00" maxlength="14" oninput="mascaraCPF(this)" value="{{ request.args.get('cpf', '') }}">
@@ -138,7 +138,7 @@
                                 <td>{{ oc.cpf_vitima }}</td>
                                 <td>{{ oc.uf }} - {{ oc.cidade }}</td>
                                 <td class="text-center">
-                                    <a href="/editar-ocorrencia/{{ oc.id }}" class="btn btn-sm btn-outline-danger fw-semibold px-3">Editar</a>
+                                    <a href="{{ url_for('update.upd_ocorrencia', id=oc.id) }}" class="btn btn-sm btn-outline-danger fw-semibold px-3">Editar</a>
                                 </td>
                             </tr>
                             {% endfor %}

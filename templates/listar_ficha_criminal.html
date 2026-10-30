@@ -92,7 +92,7 @@
     <!-- Barra Superior -->
     <div class="top-bar">
         <span>PManager</span>
-        <a href="/" class="nav-btn">Voltar</a>
+        <a href="javascript:history.back()" class="nav-btn">Voltar</a>
     </div>
 
     <!-- Conteúdo Principal -->
@@ -101,8 +101,8 @@
             <h3 class="fw-bold text-dark text-center mb-1">Consultar Ficha Criminal</h3>
             <p class="text-muted text-center mb-4">Insira o CPF ou o Nome Completo para buscar os indivíduos correspondentes.</p>
 
-            <!-- Formulário de Filtro/Pesquisa apontando para a mesma rota (recarrega a lista na tela) -->
-            <form action="/consultar-ficha" method="GET" class="row g-3 mb-4 bg-light p-3 rounded-3 border">
+            <!-- Formulário de Filtro/Pesquisa apontando para a mesma rota -->
+            <form action="{{ url_for('lista.list_fichas') }}" method="GET" class="row g-3 mb-4 bg-light p-3 rounded-3 border">
                 <div class="col-md-5">
                     <label for="busca_cpf" class="form-label text-secondary fw-semibold small">CPF</label>
                     <input type="text" class="form-control form-control-sm" id="busca_cpf" name="cpf" placeholder="000.000.000-00" maxlength="14" oninput="mascaraCPF(this)" value="{{ request.args.get('cpf', '') }}">
@@ -130,34 +130,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- EXEMPLO ESTÁTICO DE PESSOA ENCONTRADA (PARA VISUALIZAÇÃO) -->
-                        <tr class="clickable-row" onclick="window.location='/ficha-criminal/1'">
-                            <td class="fw-semibold">Carlos da Silva</td>
-                            <td>987.654.321-00</td>
-                            <td>12/04/1988</td>
-                            <td class="text-center" onclick="event.stopPropagation();">
-                                <a href="/ficha-criminal/1" class="btn btn-sm btn-outline-danger fw-semibold px-3">Ver Ficha</a>
-                            </td>
-                        </tr>
-                        <tr class="clickable-row" onclick="window.location='/ficha-criminal/2'">
-                            <td class="fw-semibold">Carlos da Silva Santos</td>
-                            <td>123.456.789-11</td>
-                            <td>22/09/1995</td>
-                            <td class="text-center" onclick="event.stopPropagation();">
-                                <a href="/ficha-criminal/2" class="btn btn-sm btn-outline-danger fw-semibold px-3">Ver Ficha</a>
-                            </td>
-                        </tr>
-
-                        <!-- SINTAXE JINJA2 / FLASK (USAR NA INTEGRAÇÃO COM BD) -->
-                        {#
+                        <!-- Loop do Jinja2 Ativo -->
                         {% if individuos %}
                             {% for ind in individuos %}
-                            <tr class="clickable-row" onclick="window.location='/ficha-criminal/{{ ind.id }}'">
+                            <tr class="clickable-row" onclick="window.location=`{{ url_for('view.ficha', id=ind.id) }}`">
                                 <td class="fw-semibold">{{ ind.nome }}</td>
                                 <td>{{ ind.cpf }}</td>
                                 <td>{{ ind.data_nascimento }}</td>
                                 <td class="text-center" onclick="event.stopPropagation();">
-                                    <a href="/ficha-criminal/{{ ind.id }}" class="btn btn-sm btn-outline-danger fw-semibold px-3">Ver Ficha</a>
+                                    <a href="{{ url_for('view.ficha', id=ind.id) }}" class="btn btn-sm btn-outline-danger fw-semibold px-3">Ver Ficha</a>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -168,7 +149,6 @@
                                 </td>
                             </tr>
                         {% endif %}
-                        #}
                     </tbody>
                 </table>
             </div>

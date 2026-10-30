@@ -1,18 +1,16 @@
 import os
 from os import abort
-
+from model.Ocorrencia import Bo
 import reposit.conexao_banco as cb
 import reposit.insercao_banco as ib
 from datetime import datetime, timezone
-import model
 from werkzeug.utils import secure_filename
 
 
 def cadastrar_ocorrencia(dados: dict):
     created_at = setar_data()
     dados.update({"created_at": created_at})
-    bo = model.Policial.Policial()
-    enviado = cb.inserir_dados(bo,dados,7)
+    enviado = cb.inserir_dados(Bo,dados,7)
     return enviado
 
 
@@ -28,8 +26,7 @@ def enviar_falta(dados: dict):
             abort(400)
         arquivo.save(os.path.join,app.config["UPLOAD_FOLDER"], filename)
         dados.update({"arquivo_falta": filename})
-    bo = model.Ocorrencia.Bo()
-    return cb.inserir_dados(bo,dados,5)
+    return cb.inserir_dados(Bo,dados,5)
 
 
 
@@ -38,8 +35,7 @@ def setar_data():
 
 def atualizar_ocorrencia(dados:dict):
     id = dados.get("id")
-    bo = model.Ocorrencia.Bo()
-    instance = cb.instanciar(bo,id)
+    instance = cb.instanciar(Bo,id)
     updated_at = setar_data()
     dados.update({"updated_at": updated_at})
     chaves = dados.keys()

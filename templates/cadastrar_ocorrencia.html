@@ -83,7 +83,7 @@
     <!-- Barra Superior -->
     <div class="top-bar">
         <span>PManager</span>
-        <a href="/" class="nav-btn">Voltar</a>
+        <a href="javascript:history.back()" class="nav-btn">Voltar</a>
     </div>
 
     <!-- Conteúdo Principal -->
@@ -92,14 +92,14 @@
             <h3 class="fw-bold text-dark text-center mb-1">Cadastrar Ocorrência</h3>
             <p class="text-muted text-center mb-4">Preencha os dados abaixo para registrar a ocorrência no sistema.</p>
 
-            <form action="/cadastrar-ocorrencia" method="POST">
+            <form action="{{ url_for('cadastro.cad_ocorrencia') }}" method="POST">
 
                 <!-- Seção 1: Localização -->
                 <div class="section-title">Localização</div>
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
                         <label for="uf" class="form-label text-secondary fw-semibold">Estado (UF)</label>
-                        <select class="form-select" id="uf" name="uf" required onchange="carregarCidades(this.value)">
+                        <select class="form-select" id="uf" name="estado" required onchange="carregarCidades(this.value)">
                             <option value="" selected disabled>Selecione o Estado</option>
                         </select>
                     </div>

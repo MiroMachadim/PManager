@@ -95,6 +95,25 @@
             background-color: #f1f3f5;
             color: #333;
         }
+
+        /* Estilos personalizados para os Badges de Status */
+        .badge-status-validacao {
+            background-color: #e2e8f0;
+            color: #475569;
+            border: 1px solid #cbd5e1;
+        }
+        .badge-status-emitido {
+            background-color: #2ecc71; /* Verde claro mais vivo */
+            color: #ffffff;
+        }
+        .badge-status-recusado {
+            background-color: #dc3545; /* Vermelho */
+            color: #ffffff;
+        }
+        .badge-status-concluido {
+            background-color: #378356; /* Verde escuro de verdade */
+            color: #ffffff;
+        }
     </style>
 </head>
 <body>
@@ -102,7 +121,7 @@
     <!-- Barra Superior -->
     <div class="top-bar">
         <span>PManager</span>
-        <a href="/consultar-ficha" class="nav-btn">Voltar</a>
+        <a href="javascript:history.back()" class="nav-btn">Voltar</a>
     </div>
 
     <!-- Conteúdo Principal -->
@@ -119,35 +138,31 @@
                 <div class="row align-items-center g-4">
                     <div class="col-md-auto text-center">
                         <div class="avatar-placeholder mx-auto">
-                            CS
+                            BR
                         </div>
                     </div>
                     <div class="col-md">
-                        <h4 class="fw-bold text-dark mb-3">{{ pessoa.nome if pessoa else 'Carlos da Silva' }}</h4>
+                        <h4 class="fw-bold text-dark mb-3">{{ pessoa.nome }}</h4>
                         <div class="row g-3">
                             <div class="col-sm-6 col-md-4">
                                 <div class="info-label">CPF</div>
-                                <div class="info-value">{{ pessoa.cpf if pessoa else '987.654.321-00' }}</div>
-                            </div>
-                            <div class="col-sm-6 col-md-4">
-                                <div class="info-label">RG</div>
-                                <div class="info-value">{{ pessoa.rg if pessoa else '12.345.678-9 SSP/SP' }}</div>
+                                <div class="info-value">{{ pessoa.cpf }}</div>
                             </div>
                             <div class="col-sm-6 col-md-4">
                                 <div class="info-label">Data de Nascimento</div>
-                                <div class="info-value">{{ pessoa.data_nascimento if pessoa else '12/04/1988' }}</div>
+                                <div class="info-value">{{ pessoa.data_nascimento }}</div>
                             </div>
                             <div class="col-sm-6 col-md-4">
                                 <div class="info-label">Nome da Mãe</div>
-                                <div class="info-value">{{ pessoa.nome_mae if pessoa else 'Maria Helena da Silva' }}</div>
+                                <div class="info-value">{{ pessoa.nome_mae }}</div>
                             </div>
                             <div class="col-sm-6 col-md-4">
                                 <div class="info-label">Nome do Pai</div>
-                                <div class="info-value">{{ pessoa.nome_pai if pessoa else 'José Carlos da Silva' }}</div>
+                                <div class="info-value">{{ pessoa.nome_pai }}</div>
                             </div>
                             <div class="col-sm-6 col-md-4">
                                 <div class="info-label">Naturalidade</div>
-                                <div class="info-value">{{ pessoa.naturalidade if pessoa else 'São Paulo - SP' }}</div>
+                                <div class="info-value">{{ pessoa.naturalidade }}</div>
                             </div>
                         </div>
                     </div>
@@ -169,37 +184,28 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- EXEMPLO ESTÁTICO DE OCORRÊNCIAS VINCULADAS -->
-                        <tr>
-                            <td class="fw-semibold">10/08/2025</td>
-                            <td>Receptação de Veículo</td>
-                            <td>SP - São Paulo</td>
-                            <td><span class="badge bg-warning text-dark">Em Validação</span></td>
-                            <td class="text-center">
-                                <a href="/editar-ocorrencia/1" class="btn btn-sm btn-outline-danger fw-semibold px-3">Ver Ocorrência</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="fw-semibold">15/02/2023</td>
-                            <td>Furto Qualificado</td>
-                            <td>SP - Campinas</td>
-                            <td><span class="badge bg-success">Concluído</span></td>
-                            <td class="text-center">
-                                <a href="/editar-ocorrencia/2" class="btn btn-sm btn-outline-danger fw-semibold px-3">Ver Ocorrência</a>
-                            </td>
-                        </tr>
-
-                        <!-- STRUCT JINJA2 / FLASK (USAR NA INTEGRAÇÃO COM BD) -->
-                        {#
                         {% if ocorrencias %}
                             {% for oc in ocorrencias %}
                             <tr>
                                 <td class="fw-semibold">{{ oc.data_registro }}</td>
                                 <td>{{ oc.tipo_crime }}</td>
-                                <td>{{ oc.uf }} - {{ oc.cidade }}</td>
-                                <td><span class="badge bg-secondary">{{ oc.status }}</span></td>
+                                <td>{{ oc.estado }} - {{ oc.cidade }}</td>
+                                <td>
+                                    <!-- Classes customizadas para cada status -->
+                                    {% if oc.status == 'Em Validação' %}
+                                        <span class="badge badge-status-validacao px-2 py-1">Em Validação</span>
+                                    {% elif oc.status == 'Emitido' %}
+                                        <span class="badge badge-status-emitido px-2 py-1">Emitido</span>
+                                    {% elif oc.status == 'Recusado' %}
+                                        <span class="badge badge-status-recusado px-2 py-1">Recusado</span>
+                                    {% elif oc.status == 'Concluido' %}
+                                        <span class="badge badge-status-concluido px-2 py-1">Concluído</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary text-white px-2 py-1">{{ oc.status }}</span>
+                                    {% endif %}
+                                </td>
                                 <td class="text-center">
-                                    <a href="/editar-ocorrencia/{{ oc.id }}" class="btn btn-sm btn-outline-danger fw-semibold px-3">Ver Ocorrência</a>
+                                    <a href="{{ url_for('update.upd_ocorrencia', id=oc.id) }}" class="btn btn-sm btn-outline-danger fw-semibold px-3">Ver Ocorrência</a>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -210,7 +216,6 @@
                                 </td>
                             </tr>
                         {% endif %}
-                        #}
                     </tbody>
                 </table>
             </div>

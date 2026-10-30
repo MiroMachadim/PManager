@@ -80,7 +80,7 @@
     <!-- Barra Superior -->
     <div class="top-bar">
         <span>PManager</span>
-        <a href="/logout" class="logout-btn">Desconectar</a>
+        <a href="{{url_for('login.logout')}}" class="logout-btn">Desconectar</a>
     </div>
 
     <!-- Conteúdo Principal da Home -->
@@ -91,15 +91,10 @@
 
             <!-- Menu de Opções -->
             <div class="d-grid gap-3">
-                <a href="/cadastrar-ocorrencia" class="btn btn-custom-red shadow-sm">Cadastrar Ocorrência</a>
-                <a href="/ver-ocorrencias" class="btn btn-custom-red shadow-sm">Ver Ocorrências</a>
-                <a href="/consultar-ficha" class="btn btn-custom-red shadow-sm">Consultar Ficha Criminal</a>
-                <a href="/justificar-falta" class="btn btn-custom-red shadow-sm">Justificar Falta</a>
-
-                <!-- VERIFICAÇÃO DE ADMINISTRAÇÃO -->
-                {% if current_user.is_admin %}
-                    <a href="/admin" class="btn btn-custom-admin shadow-sm mt-1">Acessos de Administrador</a>
-                {% endif %}
+                <a href="{{url_for('cadastro.cad_ocorrencia')}}" class="btn btn-custom-red shadow-sm">Cadastrar Ocorrência</a>
+                <a href="{{url_for('hub.ocorrencias')}}" class="btn btn-custom-red shadow-sm">Ver Ocorrências</a>
+                <a href="{{url_for('lista.list_fichas')}}" class="btn btn-custom-red shadow-sm">Consultar Ficha Criminal</a>
+                <a href="{{url_for('cadastro.cad_falta')}}" class="btn btn-custom-red shadow-sm">Justificar Falta</a>
             </div>
         </div>
     </div>

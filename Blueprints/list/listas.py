@@ -1,10 +1,13 @@
 # import query
 from flask import Blueprint, render_template, request, url_for, redirect
+from flask_login import login_required
+
 import service.list_service as ls
 
 lista_bp = Blueprint('lista', __name__)
 
 @lista_bp.route('/list_ocorrencia', methods=['GET','POST'])
+@login_required
 def list_ocorrencia():
 
     # ocorrencias = "Miro coloca aqui a table das ocorrencias"
@@ -30,6 +33,7 @@ def list_ocorrencia():
     return render_template('listar_ocorrencias.html', ocorrencias=ocorrencias)
 
 @lista_bp.route('/list_fichas', methods=['GET','POST'])
+@login_required
 def list_fichas():
 
     fichas = ls.listar_fichas()

@@ -84,7 +84,7 @@
     <!-- Barra Superior -->
     <div class="top-bar">
         <span>PManager</span>
-        <a href="/admin" class="nav-btn">Voltar</a>
+        <a href="{{url_for('admin.hub_admin')}}" class="nav-btn">Voltar</a>
     </div>
 
     <!-- Conteúdo Principal -->
@@ -94,7 +94,7 @@
             <p class="text-muted text-center mb-4">Filtre ou gerencie os perfis dos oficiais cadastrados no sistema.</p>
 
             <!-- Formulário de Filtros -->
-            <form action="/ver-perfis" method="GET" class="row g-3 mb-4 bg-light p-3 rounded-3 border">
+            <form action="{{ url_for('admin.list_perfis') }}" method="GET" class="row g-3 mb-4 bg-light p-3 rounded-3 border">
                 <div class="col-md-3">
                     <label for="filtro_nome" class="form-label text-secondary fw-semibold small">Nome</label>
                     <input type="text" class="form-control form-control-sm" id="filtro_nome" name="nome" placeholder="Digite o nome..." value="{{ request.args.get('nome', '') }}">
@@ -126,30 +126,17 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- EXEMPLO ESTÁTICO PARA VISUALIZAÇÃO DIRETA NO NAVEGADOR -->
-                        <tr class="clickable-row" onclick="window.location='/perfil-policial/1'">
-                            <td class="fw-semibold">#POL-001</td>
-                            <td>Miro Machado</td>
-                            <td>111.222.333-44</td>
-                            <td>Capitão</td>
-                            <td>Zona Norte - 5º Batalhão</td>
-                            <td class="text-center" onclick="event.stopPropagation();">
-                                <a href="/perfil-policial/1" class="btn btn-sm btn-outline-danger fw-semibold px-3">Ver Perfil</a>
-                            </td>
-                        </tr>
-
-                        <!-- STRUCT FLASK / JINJA2 (SÓ DESCOMENTAR NA INTEGRAÇÃO COM BD) -->
-                        {#
+                        <!-- STRUCT FLASK / JINJA2 -->
                         {% if policiais %}
                             {% for p in policiais %}
-                            <tr class="clickable-row" onclick="window.location='/perfil-policial/{{ p.id }}'">
+                            <tr class="clickable-row" onclick="window.location=`{{ url_for('admin.upd_policial', id=p.id) }}`">
                                 <td class="fw-semibold">#POL-{{ p.id }}</td>
                                 <td>{{ p.nome_completo }}</td>
                                 <td>{{ p.cpf }}</td>
                                 <td>{{ p.cargo }}</td>
                                 <td>{{ p.zona }}</td>
                                 <td class="text-center" onclick="event.stopPropagation();">
-                                    <a href="/perfil-policial/{{ p.id }}" class="btn btn-sm btn-outline-danger fw-semibold px-3">Ver Perfil</a>
+                                    <a href="{{ url_for('admin.upd_policial', id=p.id) }}" class="btn btn-sm btn-outline-danger fw-semibold px-3">Ver Perfil</a>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -160,7 +147,6 @@
                                 </td>
                             </tr>
                         {% endif %}
-                        #}
                     </tbody>
                 </table>
             </div>
@@ -180,4 +166,14 @@
             if (value.length > 11) value = value.slice(0, 11);
 
             value = value.replace(/(\d{3})(\d)/, "$1.$2");
-            value = value.replace(/(\d{3})(\d)/
+            value = value.replace(/(\d{3})(\d)/, "$1.$2");
+            value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+
+            input.value = value;
+        }
+    </script>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
