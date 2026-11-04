@@ -17,6 +17,8 @@ def cad_policial():
         dados = dict()
         dados["nome"] = request.form.get('nome_completo')
         dados["cpf"] = request.form.get('cpf')
+        # dados["data_nascimento"] = request.form.get('data_nascimento')
+        dados["sexo"] = request.form.get('sexo')
         dados["cargo"] = request.form.get('cargo')
         dados["zona"] = request.form.get('zona')
         dados["senha"] = request.form.get('senha_provisoria')

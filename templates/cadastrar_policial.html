@@ -104,18 +104,38 @@
 
                 <!-- Seção 1: Dados Pessoais -->
                 <div class="section-title">Dados Pessoais</div>
+
                 <div class="mb-3">
                     <label for="nome_completo" class="form-label text-secondary fw-semibold">Nome Completo</label>
                     <input type="text" class="form-control" id="nome_completo" name="nome_completo" placeholder="Digite o nome completo" value="{{ request.form.get('nome_completo', '') }}" required>
                 </div>
 
-                <div class="mb-4">
+                <div class="mb-3">
                     <label for="cpf" class="form-label text-secondary fw-semibold">CPF</label>
                     <input type="text" class="form-control" id="cpf" name="cpf" placeholder="000.000.000-00" maxlength="14" oninput="mascaraCPF(this)" value="{{ request.form.get('cpf', '') }}" required>
                 </div>
 
+                <!-- Novo Campo: Data de Nascimento -->
+                <div class="mb-3">
+                    <label for="data_nascimento" class="form-label text-secondary fw-semibold">Data de Nascimento</label>
+                    <input type="date" class="form-control" id="data_nascimento" name="data_nascimento" value="{{ request.form.get('data_nascimento', '') }}" required>
+                </div>
+
+                <!-- Novo Campo: Sexo -->
+                <div class="mb-4">
+                    <label for="sexo" class="form-label text-secondary fw-semibold">Sexo</label>
+                    <select class="form-select" id="sexo" name="sexo" required>
+                        <option value="" disabled {{ 'selected' if not request.form.get('sexo') else '' }}>Selecione uma opção</option>
+                        <option value="Masculino" {{ 'selected' if request.form.get('sexo') == 'Masculino' else '' }}>Masculino</option>
+                        <option value="Feminino" {{ 'selected' if request.form.get('sexo') == 'Feminino' else '' }}>Feminino</option>
+                        <option value="Outro" {{ 'selected' if request.form.get('sexo') == 'Outro' else '' }}>Outro</option>
+                        <option value="Prefiro não informar" {{ 'selected' if request.form.get('sexo') == 'Prefiro não informar' else '' }}>Prefiro não informar</option>
+                    </select>
+                </div>
+
                 <!-- Seção 2: Atribuições e Acesso -->
                 <div class="section-title">Atribuições & Acesso</div>
+
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
                         <label for="cargo" class="form-label text-secondary fw-semibold">Cargo Atual</label>
