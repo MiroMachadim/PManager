@@ -1,4 +1,4 @@
-from flask import redirect, url_for, render_template
+from flask import redirect, url_for, render_template, flash
 import reposit.conexao_banco as cb
 import reposit.insercao_banco as ib
 import reposit.busca_banco as bb
@@ -9,10 +9,13 @@ def cadastro_oficial(dados:dict):
     from model.Policial import Policial
     cpf = dados.get('cpf')
     oficiais = cb.selecionar_por_cpf(Policial, cpf)
+    print(oficiais)
     if not oficiais:
-        ib.inserir_oficial(dados)
-        return redirect(url_for("admin.hub._admin"))
+        oficial = ib.inserir_oficial(dados)
+        print(oficial)
+        return redirect(url_for("admin.hub_admin"))
     else:
+        print("algo deu errado")
         return redirect(url_for("cadastrar_policial"))
 
 def listar_policial(cpf, zona,cargo) -> list:
