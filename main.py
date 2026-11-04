@@ -29,13 +29,13 @@ with app.app_context():
     db.reflect()
 
 import model.Policial
-from Blueprints.admin.admin import admin_bp
-from Blueprints.auth.login import login_bp
-from Blueprints.forms.cadastros import cadastro_bp
-from Blueprints.forms.updates import update_bp
-from Blueprints.forms.view import view_bp
-from Blueprints.hubs.hubs import hub_bp
-from Blueprints.list.listas import lista_bp
+from blueprints.admin.admin import admin_bp
+from blueprints.auth.login import login_bp
+from blueprints.forms.cadastros import cadastro_bp
+from blueprints.forms.updates import update_bp
+from blueprints.forms.view import view_bp
+from blueprints.hubs.hubs import hub_bp
+from blueprints.list.listas import lista_bp
 
 app.register_blueprint(admin_bp)
 app.register_blueprint(login_bp)
