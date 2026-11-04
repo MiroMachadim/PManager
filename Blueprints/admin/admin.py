@@ -53,3 +53,12 @@ def upd_policial(id):
         return redirect(url_for("admin.list_perfis"))
     else:
         su.iniciar_edicao(id)
+
+@admin_bp.route('/upd_estados' , methods=['GET','POST'])
+def upd_parametros():
+    categoria = request.form.get("categoria")
+    novo_parametro = request.form.get("nome_item")
+    tipos_crime_db = []
+    status_db = []
+    cargos_db = []
+    return render_template("editar_parametros.html", tipos_crime=tipos_crime_db, lista_status=status_db,cargos=cargos_db)
