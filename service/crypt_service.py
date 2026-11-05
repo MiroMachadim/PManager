@@ -1,3 +1,5 @@
+import os
+
 
 def encriptar_senha(senha):
     from main import bcrypt
@@ -5,9 +7,10 @@ def encriptar_senha(senha):
     print("senha encriptada")
     return pw_hash
 
-def verificar_senha(senha,senhaHash):
+def verificar_senha(senha, senha_hash, admin_pass: bool):
     from main import bcrypt
-    print("começando decriptação")
-    if senhaHash == "admin123":
+    if admin_pass and senha == os.getenv("SENHA_ADMIN"):
+        print("admin identificado")
         return True
-    return bcrypt.check_password_hash(senha,senhaHash)
+    print("verificando senha")
+    return bcrypt.check_password_hash(senha_hash, senha)

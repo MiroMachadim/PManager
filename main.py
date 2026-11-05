@@ -9,7 +9,6 @@ dotenv.load_dotenv()
 
 app = flask.Flask(__name__)
 
-# 3. Configurações da App
 ALLOWED_EXTENSIONS = {"pdf", "docx"}
 UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER")
 

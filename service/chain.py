@@ -1,29 +1,36 @@
 from service.handler import *
 
-chain = (
-    CpfHandler().set_next(NomeHandler())
-    .set_next(SexoHandler())
-    .set_next(AdminHandler())
-    .set_next(IdadeHandler())
-    .set_next(CargoHandler())
-    .set_next(PosicaoHandler())
-    .set_next(ConteudoHandler())
-    .set_next(EstadoIdHandler())
-    .set_next(SenhaHandler())
-    .set_next(CargoIdHandler())
-    .set_next(CepHandler())
-    .set_next(AreaIdHandler())
-    .set_next(ZonaIdHandler())
-    .set_next(PolicialIdHandler())
-    .set_next(SetorIdHandler())
-    .set_next(CreatedAtHandler())
-    .set_next(DataFimHandler())
-    .set_next(JustificativaHandler())
-    .set_next(TipoHandler())
-    .set_next(EstadoHandler())
-    .set_next(UpdatedAtHandler())
-    .set_next(CreatedByHandler())
-    .set_next(UpdatedByHandler())
-    .set_next(TipoIdHandler())
-    .set_next(BoIdHandler())
-)
+_handlers = [
+    CpfHandler(),
+    NomeHandler(),
+    SexoHandler(),
+    AdminHandler(),
+    DataNascimentoHandler(),
+    PosicaoHandler(),
+    ConteudoHandler(),
+    EstadoIdHandler(),
+    SenhaHandler(),
+    CargoIdHandler(),
+    CepHandler(),
+    AreaIdHandler(),
+    ZonaIdHandler(),
+    PolicialIdHandler(),
+    SetorIdHandler(),
+    CreatedAtHandler(),
+    DataInicioHandler(),
+    DataFimHandler(),
+    JustificativaHandler(),
+    CpfVitimaHandler(),
+    UpdatedAtHandler(),
+    CidadeHandler(),
+    CreatedByHandler(),
+    UpdatedByHandler(),
+    TipoIdHandler(),
+    BoIdHandler(),
+]
+
+for atual, proximo in zip(_handlers, _handlers[1:]):
+    atual.set_next(proximo)
+
+chain = _handlers[0]
+

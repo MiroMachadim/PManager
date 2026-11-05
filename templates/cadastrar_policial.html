@@ -115,13 +115,13 @@
                     <input type="text" class="form-control" id="cpf" name="cpf" placeholder="000.000.000-00" maxlength="14" oninput="mascaraCPF(this)" value="{{ request.form.get('cpf', '') }}" required>
                 </div>
 
-                <!-- Novo Campo: Data de Nascimento -->
+                <!-- Data de Nascimento -->
                 <div class="mb-3">
                     <label for="data_nascimento" class="form-label text-secondary fw-semibold">Data de Nascimento</label>
                     <input type="date" class="form-control" id="data_nascimento" name="data_nascimento" value="{{ request.form.get('data_nascimento', '') }}" required>
                 </div>
 
-                <!-- Novo Campo: Sexo -->
+                <!-- Sexo -->
                 <div class="mb-4">
                     <label for="sexo" class="form-label text-secondary fw-semibold">Sexo</label>
                     <select class="form-select" id="sexo" name="sexo" required>
@@ -129,21 +129,27 @@
                         <option value="Masculino" {{ 'selected' if request.form.get('sexo') == 'Masculino' else '' }}>Masculino</option>
                         <option value="Feminino" {{ 'selected' if request.form.get('sexo') == 'Feminino' else '' }}>Feminino</option>
                         <option value="Outro" {{ 'selected' if request.form.get('sexo') == 'Outro' else '' }}>Outro</option>
-                        <option value="Prefiro não informar" {{ 'selected' if request.form.get('sexo') == 'Prefiro não informar' else '' }}>Prefiro não informar</option>
                     </select>
                 </div>
 
                 <!-- Seção 2: Atribuições e Acesso -->
-                <div class="section-title">Atribuições & Acesso</div>
+                <div class="section-title">Atribuições &amp; Acesso</div>
 
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
                         <label for="cargo" class="form-label text-secondary fw-semibold">Cargo Atual</label>
-                        <input type="text" class="form-control" id="cargo" name="cargo" placeholder="Ex: Soldado, Cabo, Tenente..." value="{{ request.form.get('cargo', '') }}" required>
+                        <input type="text" class="form-control" id="cargo" name="cargo" list="lista_cargos" placeholder="Ex: Soldado, Cabo, Tenente..." value="{{ request.form.get('cargo', '') }}" required autocomplete="off">
+                        <datalist id="lista_cargos">
+                            {% for cargo in cargos %}
+                                <option value="{{ cargo.nome }}">{{ cargo.nome }}</option>
+                            {% endfor %}
+                        </datalist>
+                        <div class="form-text">Comece a digitar para ver as sugestões de cargos já cadastrados.</div>
                     </div>
                     <div class="col-md-6">
-                        <label for="zona" class="form-label text-secondary fw-semibold">Zona de Atuação</label>
-                        <input type="text" class="form-control" id="zona" name="zona" placeholder="Ex: Zona Norte, 5º Batalhão..." value="{{ request.form.get('zona', '') }}" required>
+                        <label for="cidade" class="form-label text-secondary fw-semibold">Cidade de Atuação</label>
+                        <input type="text" class="form-control" id="cidade" name="cidade" placeholder="Ex: Fortaleza, Sobral, Juazeiro do Norte..." value="{{ request.form.get('cidade', '') }}" required autocomplete="off">
+                        <div class="form-text">Digite a cidade onde o oficial atua.</div>
                     </div>
                 </div>
 

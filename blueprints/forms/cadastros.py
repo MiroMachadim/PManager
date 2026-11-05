@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, request, url_for, redirect
+from flask import Blueprint, render_template, request, url_for, redirect, flash
 from flask_login import current_user, login_required
 import service.sender_service as sender
+import reposit.busca_banco as be
 
 cadastro_bp = Blueprint('cadastro', __name__)
 
@@ -9,9 +10,9 @@ cadastro_bp = Blueprint('cadastro', __name__)
 def cad_ocorrencia():
     if request.method == 'POST':
         dados = dict()
-        dados["estado_id"] = request.form.get("estado")
-        dados["area_id"] = request.form.get("cidade")
-        dados["tipo_id"] = request.form.get("tipo_crime")
+        dados["estado_id"] = request.form.get("status")
+        dados["cidade"] = request.form.get("cidade")
+        dados["tipo"] = request.form.get("tipo_crime")
         dados["cpf"] = request.form.get("cpf_vitima")
         dados["conteudo"] = request.form.get("descricao")
         dados["created_by"] = current_user.id
@@ -21,9 +22,10 @@ def cad_ocorrencia():
         if enviado:
             return redirect(url_for("hub.homepage"))
         else:
-            return render_template("cadastrar_ocorrencia.html", msg="envio de bo falhou, tente novamente")
+            flash("deu algum erro no envio")
+            return redirect(url_for("forms.cad_ocorrencia"))
 
-    return render_template("cadastrar_ocorrencia.html")
+    return render_template("cadastrar_ocorrencia.html", tipos=be.listar_tipo(), status_list=be.listar_Estado())
 
 @cadastro_bp.route('/cad_falta', methods=['GET','POST'])
 @login_required
@@ -36,4 +38,5 @@ def cad_falta():
         dados["policial_id"] = current_user.id
         if sender.enviar_falta(dados):
            return redirect(url_for("hub.homepage"))
+    print(current_user.id)
     return render_template("cadastrar_falta.html")

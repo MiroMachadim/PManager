@@ -13,14 +13,12 @@ def upd_ocorrencia(id):
 
     if request.method == 'POST':
 
-        # ocorrencia.estado = request.form.get("estado") COLOCA TODOS A BAIXO NESSE PADRÂO
-
         dados = dict()
         dados["id"] = id
         dados["estado_id"] = request.form.get("estado")
-        dados["area_id"] = request.form.get("cidade")
+        dados["cidade"] = request.form.get("cidade")
         dados["tipo_id"] = request.form.get("tipo_crime")
-        dados["cpf"] = request.form.get("cpf_vitima")
+        dados["cpf_vitima"] = request.form.get("cpf_vitima")
         dados["conteudo"] = request.form.get("descricao")
         dados["updated_by"] = current_user.id
         atualizar_ocorrencia(dados)

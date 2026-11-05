@@ -1,6 +1,7 @@
 # import query
 from flask import Blueprint, render_template, request, url_for, redirect
 from flask_login import login_required
+from service.sender_service import adquirir_cpf
 
 import service.list_service as ls
 
@@ -36,9 +37,10 @@ def list_ocorrencia():
 @login_required
 def list_fichas():
 
-    fichas = ls.listar_fichas()
     filtro_cpf = request.args.get('cpf')
+    filtro_cpf_limpo = adquirir_cpf(filtro_cpf)
     filtro_nome = request.args.get('nome')
+    fichas = ls.listar_fichas(cpf=filtro_cpf_limpo,nome=filtro_nome)
 
     print(filtro_cpf,filtro_nome)
 
