@@ -23,11 +23,14 @@ def buscar(tabela:db.Model,filtro) -> list:
 def listar_tipo():
     from model.Tipo import Tipo
     stmt = db.select(Tipo)
-    return db.session.execute(stmt).all()
+    return db.session.scalars(stmt).all()
 
 def listar_Estado():
     from model.Estado import Estado
-    stmt = db.select(Estado)
+    return db.session.scalars(
+        db.select(Estado).order_by(Estado.id)
+    ).all()
+
 
 def OcorrenciaFicha(cpf):
     ocorrencias = db.session.scalars(

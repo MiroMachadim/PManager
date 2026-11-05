@@ -14,7 +14,7 @@ def cad_ocorrencia():
         dados["cidade"] = request.form.get("cidade")
         dados["tipo"] = request.form.get("tipo_crime")
         dados["cpf"] = request.form.get("cpf_vitima")
-        dados["conteudo"] = request.form.get("descricao")
+        dados["conteudo"] = request.form.get("conteudo")
         dados["created_by"] = current_user.id
 
         enviado = sender.cadastrar_ocorrencia(dados)
@@ -23,8 +23,10 @@ def cad_ocorrencia():
             return redirect(url_for("hub.homepage"))
         else:
             flash("deu algum erro no envio")
-            return redirect(url_for("forms.cad_ocorrencia"))
+            return redirect(url_for("cadastro.cad_ocorrencia"))
 
+    print(be.listar_tipo())
+    print(be.listar_Estado())
     return render_template("cadastrar_ocorrencia.html", tipos=be.listar_tipo(), status_list=be.listar_Estado())
 
 @cadastro_bp.route('/cad_falta', methods=['GET','POST'])

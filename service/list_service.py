@@ -1,12 +1,13 @@
 import reposit.conexao_banco as cb
 import model
 import reposit.busca_banco as busca
-from sender_service import adquirir_cpf
 from db_instance import db
 
 
-def pedir_ocorrencias():
-    return cb.listar(model.Ocorrencia.Bo)
+def pedir_ocorrencias(id):
+    from model.Ocorrencia import Bo
+    return db.session.scalar(db.select(Bo).where(Bo.id == id))
+
 
 def pedir_ocorrencia_ficha(cpf):
     return busca.OcorrenciaFicha(cpf)
@@ -38,7 +39,7 @@ def listar_fichas(cpf=None , nome=None):
     condicoes = []
 
     if cpf:
-        condicoes.append(Pessoa.cpf.ilike(f"%{adquirir_cpf(cpf)}%"))
+        condicoes.append(Pessoa.cpf.ilike(f"%{cpf}%"))
 
     if nome:
         condicoes.append(Pessoa.nome.ilike(f"%{nome}%"))

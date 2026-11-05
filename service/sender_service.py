@@ -64,6 +64,7 @@ def cadastrar_ocorrencia(dados: dict):
     if not cb.selecionar_por_cpf(Pessoa,cpf_bruto):
         flash("vítima não presente no banco")
         return False
+    print(dados)
     return cb.inserir_dados(Bo, dados, 7)
 
 

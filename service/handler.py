@@ -230,7 +230,7 @@ class CreatedByHandler(AbstractHandler):
     def handle(self,request: db.Model,dados:dict,total=0) -> Optional[str]:
         created_by = dados.get('created_by')
         if created_by:
-            request.updated_at = created_by
+            request.created_by = created_by
             super().set_feito()
         return super().handle(request, dados, total)
 

@@ -133,12 +133,12 @@
                         <!-- Loop do Jinja2 Ativo -->
                         {% if individuos %}
                             {% for ind in individuos %}
-                            <tr class="clickable-row" onclick="window.location=`{{ url_for('view.ficha', id=ind.id) }}`">
+                            <tr class="clickable-row" onclick="window.location=`{{ url_for('view.ficha', cpf=ind.cpf) }}`">
                                 <td class="fw-semibold">{{ ind.nome }}</td>
                                 <td>{{ ind.cpf }}</td>
                                 <td>{{ ind.data_nascimento }}</td>
                                 <td class="text-center" onclick="event.stopPropagation();">
-                                    <a href="{{ url_for('view.ficha', id=ind.id) }}" class="btn btn-sm btn-outline-danger fw-semibold px-3">Ver Ficha</a>
+                                    <a href="{{ url_for('view.ficha', cpf=ind.cpf) }}" class="btn btn-sm btn-outline-danger fw-semibold px-3">Ver Ficha</a>
                                 </td>
                             </tr>
                             {% endfor %}
