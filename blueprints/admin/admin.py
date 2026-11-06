@@ -35,7 +35,14 @@ def cad_policial():
         dados_oficial["cidade"] = request.form.get('cidade')
         dados_oficial["senha"] = request.form.get('senha_provisoria')
         se.enviar_pessoa(dados_pessoa)
-        su.cadastro_oficial(dados_oficial)
+        sucesso = su.cadastro_oficial(dados_oficial)
+        if sucesso:
+            flash("Oficial cadastrado com sucesso", "success")
+            return redirect(url_for("admin.hub_admin"))
+        else:
+            flash("Erro ao cadastrar oficial", "error")
+            return redirect(url_for("admin.cad_policial"))
+
     return render_template(
     "cadastrar_policial.html",
         cargos=cb.listar(Cargo),

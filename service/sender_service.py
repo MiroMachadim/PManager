@@ -101,16 +101,18 @@ def enviar_falta(dados: dict):
 
 
     if arquivo is None:
-        abort(400, "Arquivo de falta não enviado")
-
+        flash("arquivo não enviado")
+        return False
     filename = secure_filename(arquivo.filename)
 
     if not filename or "." not in filename:
-        abort(400, "Nome de arquivo inválido")
+        flash("arquivo inválido")
+        return False
 
     file_ext = filename.rsplit(".", 1)[1].lower()
     if file_ext not in ALLOWED_EXTENSIONS:
-        abort(400, "Extensão não permitida")
+        flash("extensão não permitida")
+        return False
 
     arquivo.save(os.path.join(upload_folder,filename))
 
