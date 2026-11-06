@@ -48,5 +48,7 @@ def cad_falta():
         dados["policial_id"] = current_user.id
         if sender.enviar_falta(dados):
            return redirect(url_for("hub.homepage"))
+        else:
+            return redirect(url_for("cadastro.cad_falta"))
     print(current_user.id)
     return render_template("cadastrar_falta.html")
