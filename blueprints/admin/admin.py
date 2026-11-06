@@ -94,9 +94,9 @@ def upd_parametros():
             total = 1
         enviado = se.atualizar_parametros(dados, total)
         if enviado:
-            flash("cadastrado com sucesso")
+            flash("cadastrado com sucesso", 'success')
         else:
-            flash("deu algum erro")
+            flash("deu algum erro", 'warning')
         return redirect(url_for("admin.upd_parametros"))
     tipos_crime_db = cb.listar(Tipo)
     status_db = cb.listar(Estado)

@@ -113,6 +113,18 @@
     <!-- Conteúdo Principal -->
     <div class="container d-flex flex-column justify-content-center align-items-center my-5">
         <div class="form-card">
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show text-center mb-4 py-2" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
             <h3 class="fw-bold text-dark text-center mb-1">Justificar Falta</h3>
             <p class="text-muted text-center mb-4">Preencha o período e envie o documento comprovatório.</p>
 

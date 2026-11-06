@@ -13,7 +13,7 @@ def upd_ocorrencia(id):
     ocorrencia = pedir_ocorrencias(id)
 
     if not ocorrencia:
-        flash("ocorrencia não encontrada")
+        flash('Ocorrência não encontrada.', 'danger')
         return redirect(url_for('lista.list_ocorrencia'))
 
     if request.method == 'POST':
@@ -27,7 +27,7 @@ def upd_ocorrencia(id):
         dados["conteudo"] = request.form.get("descricao")
         dados["updated_by"] = current_user.id
         atualizar_ocorrencia(dados)
-
+        flash('Ocorrência atualizada com sucesso!', 'success')
         return redirect(url_for('lista.list_ocorrencia'))
 
     return render_template('editar_ocorrencia.html', ocorrencia=ocorrencia, tipos=be.listar_tipo(), status_list=be.listar_Estado())

@@ -75,10 +75,23 @@
     <!-- Conteúdo Principal do Hub do Administrador -->
     <div class="container d-flex flex-column justify-content-center align-items-center my-5">
         <div class="home-card">
+
+            <!-- Exibição de Mensagens Flash do Flask -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show text-center mb-4 py-2" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
             <h2 class="fw-bold text-dark mb-1">Acessos de Administrador</h2>
             <p class="text-muted mb-4">Selecione a ação administrativa que deseja realizar</p>
 
-            <!-- Menu com as 2 opções -->
+            <!-- Menu com as 3 opções -->
             <div class="d-grid gap-3">
                 <a href="{{url_for('admin.cad_policial')}}" class="btn btn-custom-red shadow-sm py-3 fs-6">Cadastrar Novo Policial</a>
                 <a href="{{url_for('admin.list_perfis')}}" class="btn btn-custom-red shadow-sm py-3 fs-6">Ver Perfis</a>

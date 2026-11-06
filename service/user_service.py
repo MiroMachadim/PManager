@@ -27,7 +27,7 @@ def cadastro_oficial(dados: dict):
 
     if oficial_existente:
         flash("CPF já cadastrado", "warning")
-        return redirect(url_for("cadastrar_policial"))
+        return redirect(url_for("admin.cadastrar_policial"))
 
     sucesso = ib.inserir_oficial(dados)
     if sucesso:

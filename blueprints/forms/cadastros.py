@@ -25,12 +25,12 @@ def cad_ocorrencia():
             suspeito = request.form.get("suspeitos","")
             if suspeito:
                 if sender.inserir_suspeito(suspeito,bo_id):
-                    flash("enviado com sucesso")
+                    flash('Enviado com sucesso!', 'success')
                 else:
-                    flash("AVISO:culpado não enviado")
+                    flash('AVISO: Culpado não enviado.', 'warning')
             return redirect(url_for("hub.homepage"))
         else:
-            flash("deu algum erro no envio")
+            flash('Ocorreu um erro ao registrar a ocorrência.', 'danger')
             return redirect(url_for("cadastro.cad_ocorrencia"))
 
     print(be.listar_tipo())
@@ -47,6 +47,10 @@ def cad_falta():
         dados["arquivo_falta"] = request.files.get("arquivo_comprovante")
         dados["policial_id"] = current_user.id
         if sender.enviar_falta(dados):
+           flash('Justificativa de falta enviada com sucesso!', 'success')
            return redirect(url_for("hub.homepage"))
+        else:
+           flash('Erro ao enviar. Tente Novamente','danger')
+           return redirect(url_for('cadastro.cad_falta'))
     print(current_user.id)
     return render_template("cadastrar_falta.html")

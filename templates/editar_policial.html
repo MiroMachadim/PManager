@@ -119,6 +119,18 @@
     <div class="container d-flex flex-column justify-content-center align-items-center my-5">
         <div class="content-card">
 
+            <!-- Exibição de Mensagens Flash do Flask -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show text-center mb-4 py-2" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
             <!-- Título e Subtítulo Centralizados -->
             <h3 class="fw-bold text-dark text-center mb-1">Perfil e Gerenciamento de Policial</h3>
             <p class="text-muted text-center mb-4">Visualize os dados cadastrais e atualize as informações de atribuição e acesso.</p>

@@ -18,7 +18,7 @@ def login():
           else:
                return redirect(url_for("hub.homepage"))
        else:
-           flash("cpf ou seja inválida!")
+           flash("cpf ou senha inválida!", 'danger')
            return redirect(url_for("login.login"))
 
     return render_template('login.html')
