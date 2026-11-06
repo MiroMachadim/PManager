@@ -9,8 +9,11 @@ def encriptar_senha(senha):
 
 def verificar_senha(senha, senha_hash, admin_pass: bool):
     from main import bcrypt
-    if admin_pass and senha == os.getenv("SENHA_ADMIN"):
-        print("admin identificado")
+    if admin_pass and senha == os.getenv("ADMIN_SENHA"):
         return True
     print("verificando senha")
-    return bcrypt.check_password_hash(senha_hash, senha)
+    try:
+        veri = bcrypt.check_password_hash(senha_hash, senha)
+        return veri
+    except:
+        return False
