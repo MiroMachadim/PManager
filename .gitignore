@@ -2,3 +2,6 @@ __pycache__/
 .env
 .venv/
 .idea/
+compose.yaml
+grafico/
+uploads/
