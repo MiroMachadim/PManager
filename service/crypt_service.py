@@ -14,4 +14,8 @@ def verificar_senha(senha, senha_hash, admin_pass: bool):
         print("admin identificado")
         return True
     print("verificando senha")
-    return bcrypt.check_password_hash(senha_hash, senha)
+    try:
+        veri = bcrypt.check_password_hash(senha_hash, senha)
+        return veri
+    except:
+        return False

@@ -21,6 +21,13 @@ def cad_ocorrencia():
         enviado = sender.cadastrar_ocorrencia(dados)
 
         if enviado:
+            bo_id = enviado
+            suspeito = request.form.get("suspeitos","")
+            if suspeito:
+                if sender.inserir_suspeito(suspeito,bo_id):
+                    flash("enviado com sucesso")
+                else:
+                    flash("AVISO:culpado não enviado")
             return redirect(url_for("hub.homepage"))
         else:
             flash("deu algum erro no envio")

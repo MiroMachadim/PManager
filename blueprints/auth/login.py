@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, url_for, redirect
+from flask import Blueprint, render_template, request, url_for, redirect, flash
 from flask_login import login_user, logout_user
 import service.user_service as su
 
@@ -18,7 +18,8 @@ def login():
           else:
                return redirect(url_for("hub.homepage"))
        else:
-           return render_template('login.html', erro="CPF ou senha inválidos")
+           flash("cpf ou seja inválida!")
+           return redirect(url_for("login.login"))
 
     return render_template('login.html')
 

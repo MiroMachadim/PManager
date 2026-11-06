@@ -62,4 +62,7 @@ def inserir_dados(alvo, dados: dict, total: int) -> bool:
         return False
 
     db.session.add(instancia)
-    return enviar()
+    if enviar():
+        return getattr(instancia, "id", True)
+    else:
+        return False

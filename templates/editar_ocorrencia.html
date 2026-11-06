@@ -98,7 +98,7 @@
 
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h3 class="fw-bold text-dark mb-0">Editar Ocorrência</h3>
-                <!-- Badge dinâmico de status -->
+                <!-- Badge dinâmico de status (property do model Bo) -->
                 {% if ocorrencia.status == 'Em Validação' %}
                     <span class="badge bg-light text-dark border fs-6 px-3 py-2">Em Validação</span>
                 {% elif ocorrencia.status == 'Emitido' %}
@@ -113,6 +113,18 @@
             </div>
             <p class="text-muted mb-4">Atualize os detalhes ou o status do registro policial.</p>
 
+            <!-- Mensagens Flash -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show text-center mb-4 py-2" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
             <form action="{{ url_for('update.upd_ocorrencia', id=ocorrencia.id) }}" method="POST">
 
                 <!-- Seção 1: Informações de Auditoria (NÃO EDITÁVEIS) -->
@@ -123,38 +135,35 @@
                             <label class="form-label text-muted fw-semibold small mb-1">Nº Registro</label>
                             <div class="fw-bold text-dark">#{{ ocorrencia.id }}</div>
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label text-muted fw-semibold small mb-1">Policial Responsável</label>
-                            <div class="fw-bold text-dark">{{ ocorrencia.created_by }}</div>
-                        </div>
                         <div class="col-md-5">
-                            <label class="form-label text-muted fw-semibold small mb-1">Data/Hora de Abertura</label>
-                            <div class="fw-bold text-dark">{{ ocorrencia.created_at}} - {{ocorrencia.horario_registro }}</div>
+                            <label class="form-label text-muted fw-semibold small mb-1">Policial Responsável</label>
+                            <div class="fw-bold text-dark">{{ ocorrencia.policial_responsavel }}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-muted fw-semibold small mb-1">Data de Abertura</label>
+                            <div class="fw-bold text-dark">{{ ocorrencia.created_at }}</div>
                         </div>
                         <div class="col-12 border-top pt-2 mt-2">
                             <label class="form-label text-muted fw-semibold small mb-1">Última Edição</label>
-                            <div class="text-secondary small">
-                                Editado em {{ ocorrencia.updated_at }} pelo(a) agente {{ ocorrencia.updated_by }}.
-                            </div>
+                            {% if ocorrencia.updated_at %}
+                                <div class="text-secondary small">
+                                    Editado em {{ ocorrencia.updated_at }} pelo(a) agente {{ ocorrencia.policial_editor }}.
+                                </div>
+                            {% else %}
+                                <div class="text-secondary small">
+                                    Nenhuma edição registrada.
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
 
                 <!-- Seção 2: Localização (EDITÁVEL) -->
                 <div class="section-title">Localização</div>
-                <div class="row g-3 mb-4">
-                    <div class="col-md-6">
-                        <label for="uf" class="form-label text-secondary fw-semibold">Estado (UF)</label>
-                        <select class="form-select" id="uf" name="estado" required onchange="carregarCidades(this.value)">
-                            <option value="" disabled>Selecione o Estado</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="cidade" class="form-label text-secondary fw-semibold">Cidade</label>
-                        <select class="form-select" id="cidade" name="cidade" required disabled>
-                            <option value="" disabled>Selecione a Cidade</option>
-                        </select>
-                    </div>
+                <div class="mb-4">
+                    <label for="cidade" class="form-label text-secondary fw-semibold">Cidade</label>
+                    <input type="text" class="form-control" id="cidade" name="cidade" value="{{ ocorrencia.cidade }}" placeholder="Ex: Fortaleza, Sousa..." required autocomplete="off">
+                    <div class="form-text">Cidade onde o fato ocorreu.</div>
                 </div>
 
                 <!-- Seção 3: Dados da Ocorrência (EDITÁVEL) -->
@@ -162,7 +171,13 @@
 
                 <div class="mb-3">
                     <label for="tipo_crime" class="form-label text-secondary fw-semibold">Tipo do Crime</label>
-                    <input type="text" class="form-control" id="tipo_crime" name="tipo_crime" value="{{ ocorrencia.tipo_crime }}" required>
+                    <input type="text" class="form-control" id="tipo_crime" name="tipo_crime" list="lista_tipos" value="{{ ocorrencia.tipo_crime }}" required autocomplete="off">
+                    <datalist id="lista_tipos">
+                        {% for tipo in tipos %}
+                            <option value="{{ tipo.nome }}">{{ tipo.nome }}</option>
+                        {% endfor %}
+                    </datalist>
+                    <div class="form-text">Comece a digitar para ver sugestões de tipos já cadastrados.</div>
                 </div>
 
                 <div class="mb-3">
@@ -172,7 +187,7 @@
 
                 <div class="mb-4">
                     <label for="descricao" class="form-label text-secondary fw-semibold">Descrição do Acontecimento</label>
-                    <textarea class="form-control" id="descricao" name="descricao" rows="5" required>{{ ocorrencia.relato }}</textarea>
+                    <textarea class="form-control" id="descricao" name="descricao" rows="5" required>{{ ocorrencia.conteudo }}</textarea>
                 </div>
 
                 <!-- Seção 4: Status da Ocorrência (EDITÁVEL) -->
@@ -180,11 +195,12 @@
                 <div class="mb-4">
                     <label for="status" class="form-label text-secondary fw-semibold">Atualizar Status</label>
                     <select class="form-select fw-semibold text-dark" id="status" name="status" required>
-                        <option value="Em Validação" {% if ocorrencia.status == 'Em Validação' %}selected{% endif %}>Em Validação</option>
-                        <option value="Emitido" {% if ocorrencia.status == 'Emitido' %}selected{% endif %}>Emitido</option>
-                        <option value="Recusado" {% if ocorrencia.status == 'Recusado' %}selected{% endif %}>Recusado</option>
-                        <option value="Concluído" {% if ocorrencia.status == 'Concluído' %}selected{% endif %}>Concluído</option>
+                        <option value="" disabled>Selecione o status</option>
+                        {% for st in status_list %}
+                            <option value="{{ st.nome }}" {% if ocorrencia.status == st.nome %}selected{% endif %}>{{ st.nome }}</option>
+                        {% endfor %}
                     </select>
+                    <div class="form-text">Os status vêm da lista de parâmetros (aba Status de Ocorrência).</div>
                 </div>
 
                 <!-- Botão de Atualizar -->
@@ -201,7 +217,7 @@
         &copy; 2026 PManager. Todos os Direitos reservados a Miro Machado e Allan Gabryel.
     </div>
 
-    <!-- Scripts de Funcionalidade -->
+    <!-- Script de Máscara de CPF -->
     <script>
         function mascaraCPF(input) {
             let value = input.value.replace(/\D/g, "");
@@ -212,48 +228,6 @@
             value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
 
             input.value = value;
-        }
-
-        // Variáveis injetadas dinamicamente via Jinja2 para a API do IBGE
-        const estadoAtual = "{{ ocorrencia.estado }}";
-        const cidadeAtual = "{{ ocorrencia.cidade }}";
-
-        document.addEventListener("DOMContentLoaded", function() {
-            fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome")
-                .then(response => response.json())
-                .then(data => {
-                    const ufSelect = document.getElementById("uf");
-                    data.forEach(uf => {
-                        let option = document.createElement("option");
-                        option.value = uf.sigla;
-                        option.textContent = `${uf.nome} (${uf.sigla})`;
-                        if (uf.sigla === estadoAtual) option.selected = true;
-                        ufSelect.appendChild(option);
-                    });
-                    if (estadoAtual) {
-                        carregarCidades(estadoAtual, cidadeAtual);
-                    }
-                });
-        });
-
-        function carregarCidades(siglaUF, cidadeSelecionada = null) {
-            const cidadeSelect = document.getElementById("cidade");
-            cidadeSelect.disabled = true;
-            cidadeSelect.innerHTML = '<option value="" selected disabled>Carregando cidades...</option>';
-
-            fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${siglaUF}/municipios?orderBy=nome`)
-                .then(response => response.json())
-                .then(data => {
-                    cidadeSelect.innerHTML = '<option value="" selected disabled>Selecione a Cidade</option>';
-                    data.forEach(cidade => {
-                        let option = document.createElement("option");
-                        option.value = cidade.nome;
-                        option.textContent = cidade.nome;
-                        if (cidadeSelecionada && cidade.nome === cidadeSelecionada) option.selected = true;
-                        cidadeSelect.appendChild(option);
-                    });
-                    cidadeSelect.disabled = false;
-                });
         }
     </script>
 

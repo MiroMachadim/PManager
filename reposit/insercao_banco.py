@@ -27,8 +27,13 @@ def atualizar_oficial(dados: dict) -> bool:
     senha = dados.pop('senha', None)
     if senha:
         dados['senha'] = encriptar_senha(senha)
-
-    return cb.inserir_dados(oficial, dados, 4)
+    campos_validos = {
+        k: v for k, v in dados.items()
+        if v is not None and k != "id"
+    }
+    dados.clear()
+    dados.update(campos_validos)
+    return cb.inserir_dados(oficial, dados, len(campos_validos))
 
 
 def atualizar_pessoa(dados: dict) -> bool:
