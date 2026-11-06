@@ -11,6 +11,7 @@ from model.Tipo import Tipo
 from model.Estado import Estado
 from model.Cargo import Cargo
 from model.Ocorrencia import Bo
+from model.Ficha import Ficha
 
 
 def enviar_pessoa(dados:dict):
@@ -66,6 +67,17 @@ def cadastrar_ocorrencia(dados: dict):
         return False
     print(dados)
     return cb.inserir_dados(Bo, dados, 7)
+
+def inserir_suspeito(cpf, bo_id):
+    if cpf:
+        cpf = adquirir_cpf(cpf)
+    pessoa = cb.selecionar_por_cpf(Pessoa,cpf)
+    if pessoa:
+        dados = {
+            "cpf": cpf,
+            "bo_id": bo_id
+        }
+        return cb.inserir_dados(Ficha,dados,2)
 
 
 def enviar_falta(dados: dict):

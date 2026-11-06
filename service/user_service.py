@@ -75,7 +75,6 @@ def atualizar_oficial(dados: dict):
     senha = dados.get("senha")
     if senha:
         dados.update({"senha":pc.encriptar_senha(senha)})
-
     status = ib.atualizar_oficial(dados)
     if status:
         flash("Perfil atualizado com sucesso", "success")

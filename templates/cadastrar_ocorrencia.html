@@ -145,6 +145,15 @@
                     <label for="descricao" class="form-label text-secondary fw-semibold">Descrição do Acontecimento</label>
                     <textarea class="form-control" id="descricao" name="conteudo" rows="5" placeholder="Descreva os detalhes do ocorrido..." required>{{ request.form.get('conteudo', '') }}</textarea>
                 </div>
+               <div class="section-title">Possíveis Suspeitos <span class="text-muted fw-normal">(opcional)</span></div>
+<p class="text-muted small mb-2">Informe o CPF de pessoas já cadastradas que possam estar relacionadas. Elas serão vinculadas à ficha criminal do BO.</p>
+
+<div class="input-group mb-2">
+    <input type="text" class="form-control" id="suspeito_cpf" placeholder="000.000.000-00" maxlength="14" oninput="mascaraCPF(this)">
+    <button type="button" class="btn btn-outline-danger" onclick="adicionarSuspeito()">Adicionar</button>
+</div>
+<ul class="list-group mb-3" id="lista_suspeitos"></ul>
+<input type="hidden" name="suspeitos" id="suspeitos_hidden">
 
                 <!-- Botão de Envio -->
                 <div class="d-grid mt-4">
@@ -172,6 +181,31 @@
 
             input.value = value;
         }
+       const suspeitos = [];
+
+function adicionarSuspeito() {
+    const input = document.getElementById("suspeito_cpf");
+    const cpf = input.value.replace(/\D/g, "");
+    if (cpf.length !== 11) { alert("CPF incompleto."); return; }
+    if (suspeitos.includes(cpf)) { alert("Suspeito já adicionado."); return; }
+
+    suspeitos.push(cpf);
+    const li = document.createElement("li");
+    li.className = "list-group-item d-flex justify-content-between align-items-center";
+    li.innerHTML = `<span>${mascarar(cpf)}</span><button type="button" class="btn-close"></button>`;
+    li.querySelector("button").onclick = () => { li.remove(); suspeitos.splice(suspeitos.indexOf(cpf), 1); sincronizar(); };
+    document.getElementById("lista_suspeitos").appendChild(li);
+    input.value = "";
+    sincronizar();
+}
+
+function mascarar(cpf) {
+    return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+}
+
+function sincronizar() {
+    document.getElementById("suspeitos_hidden").value = suspeitos.join(",");
+}
     </script>
 
     <!-- Bootstrap 5 JS Bundle -->

@@ -4,9 +4,30 @@ import reposit.busca_banco as busca
 from db_instance import db
 
 
-def pedir_ocorrencias(id):
+def pedir_ocorrencias(id=None, cpf=None, crime=None, data=None):
+    from db_instance import db
     from model.Ocorrencia import Bo
-    return db.session.scalar(db.select(Bo).where(Bo.id == id))
+    from model.Tipo import Tipo
+
+    if id:
+        return db.session.scalar(db.select(Bo).where(Bo.id == id))   # UM objeto Bo
+
+    stmt = db.select(Bo)
+    condicoes = []
+    if cpf:
+        condicoes.append(Bo.cpf_vitima.ilike(f"%{cpf}%"))
+    if crime:
+        stmt = stmt.join(Tipo, Bo.tipo_id == Tipo.id)
+        condicoes.append(Tipo.nome.ilike(f"%{crime}%"))
+    if data:
+        condicoes.append(Bo.created_at == data)
+    if condicoes:
+        filtro = condicoes[0]
+        for c in condicoes[1:]:
+            filtro &= c
+        stmt = stmt.where(filtro)
+
+    return db.session.scalars(stmt.order_by(Bo.created_at.desc())).all()
 
 
 def pedir_ocorrencia_ficha(cpf):
