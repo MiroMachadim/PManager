@@ -11,13 +11,14 @@ lista_bp = Blueprint('lista', __name__)
 @login_required
 def list_ocorrencia():
 
+    print(request.args)
     filtro_cpf = request.args.get("cpf")
-    filtro_nome = request.args.get("nome")
+    filtro_nome = request.args.get("crime")
     filtro_data = request.args.get("data")
 
     filtro_cpf = adquirir_cpf(filtro_cpf) if filtro_cpf else None
 
-    ocorrencias = ls.pedir_ocorrencias(cpf=filtro_cpf,nome=filtro_nome,data=filtro_data)
+    ocorrencias = ls.pedir_ocorrencias(cpf=filtro_cpf,crime=filtro_nome,data=filtro_data)
 
     return render_template('listar_ocorrencias.html', ocorrencias=ocorrencias)
 

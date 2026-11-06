@@ -2,7 +2,7 @@ import reposit.conexao_banco as cb
 import model
 import reposit.busca_banco as busca
 from db_instance import db
-
+from datetime import datetime
 
 def pedir_ocorrencias(id=None, cpf=None, crime=None, data=None):
     from db_instance import db
@@ -20,6 +20,10 @@ def pedir_ocorrencias(id=None, cpf=None, crime=None, data=None):
         stmt = stmt.join(Tipo, Bo.tipo_id == Tipo.id)
         condicoes.append(Tipo.nome.ilike(f"%{crime}%"))
     if data:
+        try:
+            data = datetime.strptime(data, "%Y-%m-%d")
+        except ValueError:
+            return False
         condicoes.append(Bo.created_at == data)
     if condicoes:
         filtro = condicoes[0]
@@ -28,6 +32,10 @@ def pedir_ocorrencias(id=None, cpf=None, crime=None, data=None):
         stmt = stmt.where(filtro)
 
     return db.session.scalars(stmt.order_by(Bo.created_at.desc())).all()
+
+def listar_ocorrencias():
+    from model.Ocorrencia import Bo
+    return db.session.scalar(db.select(Bo).order_by(Bo.created_at.desc())).all()
 
 
 def pedir_ocorrencia_ficha(cpf):
