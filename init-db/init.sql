@@ -1,14 +1,13 @@
---iniciação das tabelas se não existirem virão aqui, mas antes disso vamos diagramar tudo
 CREATE TABLE IF NOT EXISTS Pessoa(
  cpf VARCHAR(11) PRIMARY KEY,
  nome VARCHAR(100) NOT NULL,
  sexo CHAR(1) NOT NULL,
- idade INT NOT NULL
+ data_nascimento DATE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Cargo(
     id SERIAL PRIMARY KEY,
-    cargo VARCHAR(100) UNIQUE NOT NULL,
+    nome VARCHAR(100) UNIQUE NOT NULL,
     posicao INT UNIQUE NOT NULL
 );
 
@@ -16,6 +15,7 @@ CREATE TABLE IF NOT EXISTS Policial(
     id SERIAL PRIMARY KEY,
     cpf VARCHAR(11) UNIQUE NOT NULL,
     admin BOOL NOT NULL,
+    cidade VARCHAR(60) NOT NULL,
     senha TEXT UNIQUE NOT NULL,
     cargo_id INT,
     FOREIGN KEY (cpf) REFERENCES Pessoa(cpf),
@@ -75,31 +75,30 @@ CREATE TABLE IF NOT EXISTS Falta(
 
 CREATE TABLE IF NOT EXISTS TipoOcorrencia(
     id SERIAL PRIMARY KEY,
-    tipo VARCHAR(50) UNIQUE NOT NULL
+    nome VARCHAR(50) UNIQUE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Estados(
     id SERIAL PRIMARY KEY,
-    estado varchar(50) UNIQUE NOT NULL
+    nome varchar(50) UNIQUE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Bo(
     id SERIAL PRIMARY KEY,
     created_at DATE NOT NULL,
     updated_at DATE,
-    created_by VARCHAR(100) NOT NULL,
-    updated_by VARCHAR(100),
+    created_by INT NOT NULL,
+    updated_by INT,
     tipo_id INT NOT NULL,
     cpf_vitima VARCHAR(11) NOT NULL,
+    cidade VARCHAR(60) NOT NULL,
     conteudo TEXT NOT NULL,
-    area_id int,
     estado_id INT,
     FOREIGN KEY (cpf_vitima) REFERENCES Pessoa(cpf),
-    FOREIGN KEY (created_by) REFERENCES Pessoa(cpf),
-    FOREIGN KEY (updated_by) REFERENCES Pessoa(cpf),
+    FOREIGN KEY (created_by) REFERENCES Policial(id),
+    FOREIGN KEY (updated_by) REFERENCES Policial(id),
     FOREIGN KEY (tipo_id) REFERENCES TipoOcorrencia(id),
-    FOREIGN KEY (estado_id) REFERENCES Estados(id),
-    FOREIGN KEY (area_id) REFERENCES Area(id)
+    FOREIGN KEY (estado_id) REFERENCES Estados(id)
 );
 
 CREATE TABLE IF NOT EXISTS Ficha(

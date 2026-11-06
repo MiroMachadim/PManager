@@ -80,26 +80,34 @@
     <!-- Barra Superior -->
     <div class="top-bar">
         <span>PManager</span>
-        <a href="/logout" class="logout-btn">Desconectar</a>
+        <a href="{{url_for('login.logout')}}" class="logout-btn">Desconectar</a>
     </div>
 
     <!-- Conteúdo Principal da Home -->
     <div class="container d-flex flex-column justify-content-center align-items-center my-5">
         <div class="home-card">
+
+            <!-- Exibição de Mensagens Flash (Sucesso, Alertas, Erros) -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show text-center mb-4 py-2" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
             <h2 class="fw-bold text-dark mb-1">PManager</h2>
             <p class="text-muted mb-4">Selecione a opção desejada</p>
 
             <!-- Menu de Opções -->
             <div class="d-grid gap-3">
-                <a href="/cadastrar-ocorrencia" class="btn btn-custom-red shadow-sm">Cadastrar Ocorrência</a>
-                <a href="/ver-ocorrencias" class="btn btn-custom-red shadow-sm">Ver Ocorrências</a>
-                <a href="/consultar-ficha" class="btn btn-custom-red shadow-sm">Consultar Ficha Criminal</a>
-                <a href="/justificar-falta" class="btn btn-custom-red shadow-sm">Justificar Falta</a>
-
-                <!-- VERIFICAÇÃO DE ADMINISTRAÇÃO -->
-                {% if current_user.is_admin %}
-                    <a href="/admin" class="btn btn-custom-admin shadow-sm mt-1">Acessos de Administrador</a>
-                {% endif %}
+                <a href="{{url_for('cadastro.cad_ocorrencia')}}" class="btn btn-custom-red shadow-sm">Cadastrar Ocorrência</a>
+                <a href="{{url_for('hub.ocorrencias')}}" class="btn btn-custom-red shadow-sm">Ver Ocorrências</a>
+                <a href="{{url_for('lista.list_fichas')}}" class="btn btn-custom-red shadow-sm">Consultar Ficha Criminal</a>
+                <a href="{{url_for('cadastro.cad_falta')}}" class="btn btn-custom-red shadow-sm">Justificar Falta</a>
             </div>
         </div>
     </div>
