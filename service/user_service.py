@@ -29,7 +29,7 @@ def cadastro_oficial(dados: dict):
         flash("CPF já cadastrado", "warning")
         return redirect(url_for("cadastrar_policial"))
 
-    sucesso = ib.inserir_oficial(dados)
+    return ib.inserir_oficial(dados)
     if sucesso:
         flash("Oficial cadastrado com sucesso", "success")
         return redirect(url_for("admin.hub_admin"))
