@@ -16,6 +16,7 @@ def cad_ocorrencia():
         dados["cpf"] = request.form.get("cpf_vitima")
         dados["conteudo"] = request.form.get("conteudo")
         dados["created_by"] = current_user.id
+        print(dados)
 
         enviado = sender.cadastrar_ocorrencia(dados)
 
