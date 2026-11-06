@@ -1,4 +1,3 @@
---iniciação das tabelas se não existirem virão aqui, mas antes disso vamos diagramar tudo
 CREATE TABLE IF NOT EXISTS Pessoa(
  cpf VARCHAR(11) PRIMARY KEY,
  nome VARCHAR(100) NOT NULL,

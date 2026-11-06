@@ -12,9 +12,9 @@ app = flask.Flask(__name__)
 ALLOWED_EXTENSIONS = {"pdf", "docx"}
 UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER")
 
-app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")  # Corrigido!
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False  # Recomendado mudar para False
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["MAX_CONTENT_LENGTH"] = 32 * 1024 * 1024
 app.config["UPLOAD_EXTENSIONS"] = ALLOWED_EXTENSIONS
